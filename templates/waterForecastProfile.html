@@ -10,6 +10,16 @@
                 <option value="1">Model 1 — Semi-Sustainable</option>
                 <option value="2">Model 2 — Non-Sustainable</option>
             </select>
+            <label for="waterForecastTimeframe">Choose a timeframe:</label>
+            <select name="waterForecastTimeframe" id="waterForecastTimeframe">
+                <option value="0.5">6 Months</option>
+                <option value="1" selected="selected">1 Year</option>
+                <option value="2">2 Years</option>
+                <option value="3">3 Years</option>
+                <option value="4">4 Years</option>
+                <option value="5">5 Years</option>
+                <option value="10">10 Years</option>
+            </select>
         </div>
         <div id="waterForecastDisplay">
             <p id="waterObjStaticVariables" style="font-family: serif" class="w3-center"></p>
@@ -20,5 +30,5 @@
     <script src="https://www.amcharts.com/lib/4/core.js"></script>
     <script src="https://www.amcharts.com/lib/4/charts.js"></script>
     <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
-    <script src="/static/js/waterForecast/waterForecast.js"></script>
+    <script src="static/js/waterForecastProfile.js"></script>
 {% endblock %}
