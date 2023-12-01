@@ -5,10 +5,14 @@
         <div class="w3-container w3-center" style="color:black; font-family: serif">
             <input type="button" id="simulateForecast" value="Simulate Forecast">
             <input type="button" id="viewRawForecastData" value="View Raw Forecast Data">
-            <label for="forecastModel">Choose a model:</label>
-            <select name="forecastModel" id="forecastModel">
-                <option value="A1" selected="selected">Model A — Sustainable</option>
-                <option value="A2">Model A — Non-Sustainable</option>
+            <label for="forecastBaseModel">Choose a base model:</label>
+            <select name="forecastBaseModel" id="forecastBaseModel">
+                <option value="A" selected="selected">A</option>
+            </select>
+            <label for="forecastEnvironment">Choose Environment:</label>
+            <select name="forecastEnvironment" id="forecastEnvironment">
+                <option value="1" selected="selected">Sustainable</option>
+                <option value="2">Non-Sustainable</option>
             </select>
             <label for="forecastTimeframe">Choose a timeframe:</label>
             <select name="forecastTimeframe" id="forecastTimeframe">

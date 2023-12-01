@@ -10,9 +10,9 @@ var ForecastProfile = {
         document.getElementById("simulateForecast").addEventListener("click", function () {
             $.post("/simulate_forecast",
                 {
-                    forecastModel: document.getElementById("forecastModel").value,
+                    forecastBaseModel: document.getElementById("forecastBaseModel").value,
+                    forecastEnvironment: document.getElementById("forecastEnvironment").value,
                     forecastTimeframe: document.getElementById("forecastTimeframe").value
-
                 }
             )
                 .done(function (data, status) {

@@ -19,10 +19,12 @@ def forecast_profile():
 
 @views_bp.route('/simulate_forecast', methods=['POST'])
 def simulate_forecast():
-    forecast_model = str(request.form["forecastModel"])
+    forecast_base_model = str(request.form["forecastBaseModel"])
+    forecast_environment = int(request.form["forecastEnvironment"])
     forecast_timeframe = float(request.form["forecastTimeframe"])
     forecast_container_obj = ForecastModelContainer(
-        forecast_model_name=forecast_model,
+        forecast_base_model=forecast_base_model,
+        forecast_environment=forecast_environment,
         forecast_timeframe=forecast_timeframe)
     model_obj_dict_string = json.dumps(forecast_container_obj.run())
 
