@@ -4,7 +4,6 @@ from flask_mongoengine import MongoEngine, MongoEngineSessionInterface
 
 from views.home import home_bp
 from views.views_water_forecast import views_water_forecast_bp
-from views.view_error import view_error_bp
 
 import sys
 
@@ -21,7 +20,6 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 CORS(app)
 app.register_blueprint(home_bp)
-app.register_blueprint(view_error_bp)
 app.register_blueprint(views_water_forecast_bp)
 
 if __name__ == "__main__":

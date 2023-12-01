@@ -21,7 +21,10 @@ def simulate_water_forecast():
     WaterForecastObj.drop_collection()
     water_forecast_database_obj = WaterForecastObj(water_forecast_obj_dict_string=water_forecast_obj_dict_string)
     water_forecast_database_obj.save()
-    return Response("Success", 200)
+
+    response_data = water_forecast_obj_dict_string
+    response_status = 200
+    return Response(response_data, response_status)
 
 
 @views_water_forecast_bp.route('/water_forecast_obj_dict', methods=['GET'])
@@ -29,7 +32,11 @@ def water_forecast_obj_dict():
     if WaterForecastObj.objects:
         water_forecast_database_obj = WaterForecastObj.objects.first()
         water_forecast_obj_dict_string = water_forecast_database_obj.water_forecast_obj_dict_string
-        return Response(water_forecast_obj_dict_string, 200)
+
+        response_data = water_forecast_obj_dict_string
+        response_status = 200
+        return Response(response_data, response_status)
     else:
-        no_object_response_string = "No object"
-        return Response(no_object_response_string, 200)
+        response_data = json.dumps([])
+        response_status = 200
+        return Response(response_data, response_status)

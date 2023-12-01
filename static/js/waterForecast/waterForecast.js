@@ -2,9 +2,6 @@ var WaterForecast = {
     init: function () {
         this.waterForecast();
     },
-    getWaterForecastObjLocalKey: function () {
-        return "waterForecastObjDictString"
-    },
     waterForecast: function () {
         this.waterForecastSetupSimulateForecast()
         this.waterForecastSetupRawDataFetch()
@@ -17,24 +14,16 @@ var WaterForecast = {
                 }
             )
                 .done(function (data, status) {
+                    let waterForecastObjDict = JSON.parse(data)
+                    WaterForecast.waterForecastObjStaticVariables(waterForecastObjDict)
+                    WaterForecast.waterForecastObjGraph(waterForecastObjDict)
+                })
+                .fail(function (data, status) {
                     console.log(data)
-                })
-                .fail(function () {
-                    // window.location.href = "/view_error"
+                    console.log(status)
+                    let waterForecastDisplay = document.getElementById("waterForecastDisplay");
+                    waterForecastDisplay.innerHTML = data.status + "<br>" + data.statusText + "<br>" + data.responseText
                 });
-
-            $.get("/water_forecast_obj_dict")
-                .done(function (data, status) {
-                    if (typeof (data) !== "string") {
-                        data = JSON.stringify(data, null, 2);
-                    }
-                    localStorage.setItem(WaterForecast.getWaterForecastObjLocalKey(), data);
-                })
-                .fail(function () {
-                    // window.location.href = "/view_error"
-                });
-            WaterForecast.waterForecastObjStaticVariables()
-            WaterForecast.waterForecastObjGraph()
         }, false);
     },
     waterForecastSetupRawDataFetch() {
@@ -42,8 +31,7 @@ var WaterForecast = {
             window.location.href = "/water_forecast_obj_dict"
         }, false);
     },
-    waterForecastObjStaticVariables: function () {
-        let waterForecastObjDict = JSON.parse(localStorage.getItem(WaterForecast.getWaterForecastObjLocalKey()))
+    waterForecastObjStaticVariables: function (waterForecastObjDict) {
         let waterObjStaticVariables = document.getElementById("waterObjStaticVariables");
 
         /*Static Variables*/
@@ -68,8 +56,7 @@ var WaterForecast = {
         waterObjStaticVariables.appendChild(tTitle)
         waterObjStaticVariables.appendChild(tValue)
     },
-    waterForecastObjGraph: function () {
-        let waterForecastObjDict = JSON.parse(localStorage.getItem(WaterForecast.getWaterForecastObjLocalKey()))
+    waterForecastObjGraph: function (waterForecastObjDict) {
 
         am4core.useTheme(am4themes_animated);
 
