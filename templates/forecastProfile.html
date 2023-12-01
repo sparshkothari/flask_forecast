@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block body %}
+    <body>
+    <div id="main">
+        <div class="w3-container w3-center" style="color:black; font-family: serif">
+            <input type="button" id="simulateForecast" value="Simulate Forecast">
+            <input type="button" id="viewRawForecastData" value="View Raw Forecast Data">
+            <label for="forecastBaseModel">Choose a base model:</label>
+            <select name="forecastBaseModel" id="forecastBaseModel">
+                <option value="A" selected="selected">A</option>
+            </select>
+            <label for="forecastEnvironment">Choose Environment:</label>
+            <select name="forecastEnvironment" id="forecastEnvironment">
+                <option value="1" selected="selected">Sustainable</option>
+                <option value="2">Non-Sustainable</option>
+            </select>
+            <label for="forecastTimeframe">Choose a timeframe:</label>
+            <select name="forecastTimeframe" id="forecastTimeframe">
+                <option value="0.5">6 Months</option>
+                <option value="1" selected="selected">1 Year</option>
+                <option value="2">2 Years</option>
+                <option value="3">3 Years</option>
+                <option value="4">4 Years</option>
+                <option value="5">5 Years</option>
+                <option value="10">10 Years</option>
+            </select>
+        </div>
+        <div id="forecastDisplay">
+            <p id="forecastObjStaticVariables" style="font-family: serif" class="w3-center"></p>
+            <div id="forecastChartDiv" style="height: 750px;width: 100%;"></div>
+        </div>
+    </div>
+    </body>
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+    <script src="/static/js/forecastProfile.js"></script>
+{% endblock %}
