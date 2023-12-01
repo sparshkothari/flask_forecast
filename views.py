@@ -9,12 +9,12 @@ views_bp = Blueprint('views_bp', __name__)
 
 @views_bp.route('/', methods=['GET'])
 def index():
-    return render_template("home/index.html")
+    return render_template("index.html")
 
 
 @views_bp.route('/water_forecast_profile', methods=['GET'])
 def water_forecast_profile():
-    return render_template("waterForecast/waterForecastProfile.html")
+    return render_template("waterForecastProfile.html")
 
 
 @views_bp.route('/simulate_water_forecast', methods=['POST'])

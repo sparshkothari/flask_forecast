@@ -1,8 +1,8 @@
-var WaterForecast = {
+var WaterForecastProfile = {
     init: function () {
-        this.waterForecast();
+        this.waterForecastProfile();
     },
-    waterForecast: function () {
+    waterForecastProfile: function () {
         this.waterForecastSetupSimulateForecast()
         this.waterForecastSetupRawDataFetch()
     },
@@ -17,8 +17,8 @@ var WaterForecast = {
             )
                 .done(function (data, status) {
                     let waterForecastObjDict = JSON.parse(data)
-                    WaterForecast.waterForecastObjStaticVariables(waterForecastObjDict)
-                    WaterForecast.waterForecastObjGraph(waterForecastObjDict)
+                    WaterForecastProfile.waterForecastObjStaticVariables(waterForecastObjDict)
+                    WaterForecastProfile.waterForecastObjGraph(waterForecastObjDict)
                 })
                 .fail(function (data, status) {
                     console.log(data)
@@ -83,4 +83,4 @@ var WaterForecast = {
 
 }
 
-WaterForecast.init()
+WaterForecastProfile.init()
