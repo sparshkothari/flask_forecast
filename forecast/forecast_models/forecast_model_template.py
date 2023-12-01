@@ -4,7 +4,7 @@
 class ForecastModelTemplate:
 
     def __init__(self, forecast_timeframe: float):
-        self.water_forecast_model_name = self.__class__.__name__
+        self.forecast_model_name = self.__class__.__name__
         self.duration_number_of_days = int(forecast_timeframe * 365)
         self.current_water_reserves = 0.0
         self.water_reserves_data = []

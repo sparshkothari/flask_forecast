@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, session, request
+from flask import Blueprint, render_template, request
 from werkzeug.wrappers.response import Response
 import json
 from models import ForecastObj
-from water_forecast.forecast_models.forecast_model_container import ForecastModelContainer
+from forecast.forecast_models.forecast_model_container import ForecastModelContainer
 
 views_bp = Blueprint('views_bp', __name__)
 
@@ -12,13 +12,13 @@ def index():
     return render_template("index.html")
 
 
-@views_bp.route('/water_forecast_profile', methods=['GET'])
-def water_forecast_profile():
-    return render_template("waterForecastProfile.html")
+@views_bp.route('/forecast_profile', methods=['GET'])
+def forecast_profile():
+    return render_template("forecastProfile.html")
 
 
-@views_bp.route('/simulate_water_forecast', methods=['POST'])
-def simulate_water_forecast():
+@views_bp.route('/simulate_forecast', methods=['POST'])
+def simulate_forecast():
     forecast_model = str(request.form["forecastModel"])
     forecast_timeframe = float(request.form["forecastTimeframe"])
     forecast_container_obj = ForecastModelContainer(
@@ -35,8 +35,8 @@ def simulate_water_forecast():
     return Response(response_data, response_status)
 
 
-@views_bp.route('/water_forecast_obj_dict', methods=['GET'])
-def water_forecast_obj_dict():
+@views_bp.route('/forecast_obj_dict', methods=['GET'])
+def forecast_obj_dict():
     if ForecastObj.objects:
         forecast_database_obj = ForecastObj.objects.first()
         model_obj_dict_string = forecast_database_obj.model_obj_dict_string

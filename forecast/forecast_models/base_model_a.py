@@ -1,7 +1,7 @@
 # base_model_a.py
 from random import Random
 
-from water_forecast.forecast_models.forecast_model_template import ForecastModelTemplate
+from forecast.forecast_models.forecast_model_template import ForecastModelTemplate
 
 
 class BaseModelA(ForecastModelTemplate):

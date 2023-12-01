@@ -1,5 +1,5 @@
 # forecast_model_container.py
-from water_forecast.forecast_models.base_model_a import ModelASustainable, ModelANonSustainable
+from forecast.forecast_models.base_model_a import ModelASustainable, ModelANonSustainable
 
 
 class ForecastModelContainer:

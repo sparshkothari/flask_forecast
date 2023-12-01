@@ -3,8 +3,8 @@
     <body>
     <div id="main">
         <div class="w3-container w3-center" style="color:black; font-family: serif">
-            <input type="button" id="simulateWaterForecast" value="Simulate Water Forecast">
-            <input type="button" id="viewRawWaterForecastData" value="View Raw Water Forecast Data">
+            <input type="button" id="simulateForecast" value="Simulate Forecast">
+            <input type="button" id="viewRawForecastData" value="View Raw Forecast Data">
             <label for="forecastModel">Choose a model:</label>
             <select name="forecastModel" id="forecastModel">
                 <option value="A1" selected="selected">Model A — Sustainable</option>
@@ -21,14 +21,14 @@
                 <option value="10">10 Years</option>
             </select>
         </div>
-        <div id="waterForecastDisplay">
-            <p id="waterObjStaticVariables" style="font-family: serif" class="w3-center"></p>
-            <div id="waterForecastChartDiv" style="height: 750px;width: 100%;"></div>
+        <div id="forecastDisplay">
+            <p id="forecastObjStaticVariables" style="font-family: serif" class="w3-center"></p>
+            <div id="forecastChartDiv" style="height: 750px;width: 100%;"></div>
         </div>
     </div>
     </body>
     <script src="https://www.amcharts.com/lib/4/core.js"></script>
     <script src="https://www.amcharts.com/lib/4/charts.js"></script>
     <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
-    <script src="static/js/waterForecastProfile.js"></script>
+    <script src="/static/js/forecastProfile.js"></script>
 {% endblock %}
