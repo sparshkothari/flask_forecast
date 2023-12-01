@@ -21,8 +21,6 @@ var ForecastProfile = {
                     ForecastProfile.chart(forecastObjDict)
                 })
                 .fail(function (data, status) {
-                    console.log(data)
-                    console.log(status)
                     let forecastDisplay = document.getElementById("forecastDisplay");
                     forecastDisplay.innerHTML = data.status + "<br>" + data.statusText + "<br>" + data.responseText
                 });
