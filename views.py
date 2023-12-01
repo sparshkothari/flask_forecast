@@ -4,15 +4,20 @@ import json
 from models import WaterForecastObj
 from water_forecast.water_forecast import WaterForecast
 
-views_water_forecast_bp = Blueprint('views_water_forecast_bp', __name__)
+views_bp = Blueprint('views_bp', __name__)
 
 
-@views_water_forecast_bp.route('/water_forecast', methods=['GET'])
-def water_forecast():
-    return render_template("waterForecast/waterForecast.html")
+@views_bp.route('/', methods=['GET'])
+def index():
+    return render_template("home/index.html")
 
 
-@views_water_forecast_bp.route('/simulate_water_forecast', methods=['POST'])
+@views_bp.route('/water_forecast_profile', methods=['GET'])
+def water_forecast_profile():
+    return render_template("waterForecast/waterForecastProfile.html")
+
+
+@views_bp.route('/simulate_water_forecast', methods=['POST'])
 def simulate_water_forecast():
     water_forecast_model = int(request.form["waterForecastModel"])
     water_forecast_timeframe = float(request.form["waterForecastTimeframe"])
@@ -30,7 +35,7 @@ def simulate_water_forecast():
     return Response(response_data, response_status)
 
 
-@views_water_forecast_bp.route('/water_forecast_obj_dict', methods=['GET'])
+@views_bp.route('/water_forecast_obj_dict', methods=['GET'])
 def water_forecast_obj_dict():
     if WaterForecastObj.objects:
         water_forecast_database_obj = WaterForecastObj.objects.first()
