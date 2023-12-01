@@ -10,7 +10,9 @@ var WaterForecast = {
         document.getElementById("simulateWaterForecast").addEventListener("click", function () {
             $.post("/simulate_water_forecast",
                 {
-                    waterForecastModel: document.getElementById("waterForecastModel").value
+                    waterForecastModel: document.getElementById("waterForecastModel").value,
+                    waterForecastTimeframe: document.getElementById("waterForecastTimeframe").value
+
                 }
             )
                 .done(function (data, status) {

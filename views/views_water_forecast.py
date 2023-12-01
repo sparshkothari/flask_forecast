@@ -15,7 +15,10 @@ def water_forecast():
 @views_water_forecast_bp.route('/simulate_water_forecast', methods=['POST'])
 def simulate_water_forecast():
     water_forecast_model = int(request.form["waterForecastModel"])
-    water_forecast_obj = WaterForecast(water_forecast_model=water_forecast_model)
+    water_forecast_timeframe = float(request.form["waterForecastTimeframe"])
+    water_forecast_obj = WaterForecast(
+        water_forecast_model=water_forecast_model,
+        water_forecast_timeframe=water_forecast_timeframe)
     water_forecast_obj_dict_string = json.dumps(water_forecast_obj.run())
 
     WaterForecastObj.drop_collection()

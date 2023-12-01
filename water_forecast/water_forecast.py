@@ -4,7 +4,7 @@ from random import Random
 
 class WaterForecast:
 
-    def __init__(self, water_forecast_model: int):
+    def __init__(self, water_forecast_model: int, water_forecast_timeframe: float):
         self.water_forecast_model = water_forecast_model
         self.water_forecast_model_name = ""
         self.average_daily_water_consumption = 0.0
@@ -14,7 +14,7 @@ class WaterForecast:
         self.average_water_collection_per_import = 0.0
         self.daily_contamination_probability = 0.0
         self.average_percent_water_lost_during_contamination = 0.0
-        self.duration_number_of_days = 0
+        self.duration_number_of_days = int(water_forecast_timeframe * 365)
         self.current_water_reserves = 0.0
         self.water_reserves_data = []
 
@@ -36,7 +36,6 @@ class WaterForecast:
         self.average_water_collection_per_import = 1000.0
         self.daily_contamination_probability = 0.1
         self.average_percent_water_lost_during_contamination = 0.05
-        self.duration_number_of_days = 365
 
     def configure_model_2(self):
         self.average_daily_water_consumption = 500.0
@@ -46,7 +45,6 @@ class WaterForecast:
         self.average_water_collection_per_import = 500.0
         self.daily_contamination_probability = 0.1
         self.average_percent_water_lost_during_contamination = 0.1
-        self.duration_number_of_days = 365
 
 
     def run(self):
