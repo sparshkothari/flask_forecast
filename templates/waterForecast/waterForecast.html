@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block body %}
+    <body>
+    <div id="main">
+        <div class="w3-container w3-center" style="color:black; font-family: serif">
+            <input type="button" id="simulateWaterForecast" value="Simulate Water Forecast">
+            <input type="button" id="viewRawWaterForecastData" value="View Raw Water Forecast Data">
+            <label for="waterForecastModel">Choose a model:</label>
+            <select name="waterForecastModel" id="waterForecastModel">
+                <option value="1">Model 1 — Semi-Sustainable</option>
+                <option value="2">Model 2 — Non-Sustainable</option>
+            </select>
+        </div>
+        <div id="waterForecastDisplay">
+            <p id="waterObjStaticVariables" style="font-family: serif" class="w3-center"></p>
+            <div id="waterForecastChartDiv" style="height: 750px;width: 100%;"></div>
+        </div>
+    </div>
+    </body>
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+    <script src="/static/js/waterForecast/waterForecast.js"></script>
+{% endblock %}
