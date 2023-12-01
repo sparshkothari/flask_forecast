@@ -6,6 +6,10 @@ var WaterForecast = {
         return "waterForecastObjDictString"
     },
     waterForecast: function () {
+        this.waterForecastSetupSimulateForecast()
+        this.waterForecastSetupRawDataFetch()
+    },
+    waterForecastSetupSimulateForecast() {
         document.getElementById("simulateWaterForecast").addEventListener("click", function () {
             $.post("/simulate_water_forecast",
                 {
@@ -32,7 +36,11 @@ var WaterForecast = {
             WaterForecast.waterForecastObjStaticVariables()
             WaterForecast.waterForecastObjGraph()
         }, false);
-
+    },
+    waterForecastSetupRawDataFetch() {
+        document.getElementById("viewRawWaterForecastData").addEventListener("click", function () {
+            window.location.href = "/water_forecast_obj_dict"
+        }, false);
     },
     waterForecastObjStaticVariables: function () {
         let waterForecastObjDict = JSON.parse(localStorage.getItem(WaterForecast.getWaterForecastObjLocalKey()))

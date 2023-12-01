@@ -16,8 +16,9 @@ def water_forecast():
 def simulate_water_forecast():
     water_forecast_model = int(request.form["waterForecastModel"])
     water_forecast_obj = WaterForecast(water_forecast_model=water_forecast_model)
-
     water_forecast_obj_dict_string = json.dumps(water_forecast_obj.run())
+
+    WaterForecastObj.drop_collection()
     water_forecast_database_obj = WaterForecastObj(water_forecast_obj_dict_string=water_forecast_obj_dict_string)
     water_forecast_database_obj.save()
     return Response("Success", 200)
@@ -28,9 +29,7 @@ def water_forecast_obj_dict():
     if WaterForecastObj.objects:
         water_forecast_database_obj = WaterForecastObj.objects.first()
         water_forecast_obj_dict_string = water_forecast_database_obj.water_forecast_obj_dict_string
-        WaterForecastObj.drop_collection()
         return Response(water_forecast_obj_dict_string, 200)
     else:
-        error_string = "Error: No object"
-        session["error_response"] = error_string
-        return Response(error_string, 400)
+        no_object_response_string = "No object"
+        return Response(no_object_response_string, 200)
