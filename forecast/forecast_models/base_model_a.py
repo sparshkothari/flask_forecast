@@ -8,6 +8,7 @@ class BaseModelA(ForecastModelTemplate):
 
     def __init__(self, forecast_timeframe: float):
         super().__init__(forecast_timeframe)
+        self.forecast_base_model = "A"
         self.average_daily_water_consumption = 0.0
         self.daily_rainfall_probability = 0.0
         self.average_water_collection_per_rainfall = 0.0
@@ -43,6 +44,9 @@ class ModelASustainable(BaseModelA):
 
     def __init__(self, forecast_timeframe: float):
         super().__init__(forecast_timeframe)
+        self.forecast_environment_number = 1
+        self.forecast_environment = "sustainable"
+        self.forecast_data_key += str(self.forecast_environment_number)
         self.average_daily_water_consumption = 500.0
         self.daily_rainfall_probability = 0.2
         self.average_water_collection_per_rainfall = 10000.0
@@ -56,6 +60,9 @@ class ModelANonSustainable(BaseModelA):
 
     def __init__(self, forecast_timeframe: float):
         super().__init__(forecast_timeframe)
+        self.forecast_environment_number = 2
+        self.forecast_environment = "non-sustainable"
+        self.forecast_data_key += str(self.forecast_environment_number)
         self.average_daily_water_consumption = 500.0
         self.daily_rainfall_probability = 0.05
         self.average_water_collection_per_rainfall = 10000.0
