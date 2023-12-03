@@ -25,10 +25,18 @@
                 <option value="5">5 Years</option>
                 <option value="10">10 Years</option>
             </select>
+              <label for="forecastDisplayType">Choose a display type:</label>
+            <select name="forecastDisplayType" id="forecastDisplayType">
+                <option value="0" selected="selected">Line and Fill</option>
+                <option value="1">Line</option>
+                <option value="2">Fill</option>
+            </select>
         </div>
         <div id="forecastDisplay" class="w3-center">
             <div id="forecastObjArrayStaticVariables" style="font-family: serif" class="w3-bar w3-center"></div>
-            <div id="forecastChartDiv" style="height: 750px;width: 100%;"></div>
+            <div id="forecastChartDivDisplay">
+                <div id="forecastChartDivRows"></div>
+            </div>
         </div>
     </div>
     </body>
