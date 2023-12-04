@@ -9,8 +9,9 @@ class GenerateBaseModelAArray(GenerateBaseModelArray):
 
     def __init__(self, forecast_timeframe: float):
         super().__init__(forecast_timeframe)
-        self.array.append(ModelASustainable(forecast_timeframe))
-        self.array.append(ModelANonSustainable(forecast_timeframe))
+        self.array.append(A1(forecast_timeframe))
+        self.array.append(A2(forecast_timeframe))
+        self.array.append(A3(forecast_timeframe))
 
 
 class BaseModelAChartVariables(BaseModelChartVariables):
@@ -20,16 +21,17 @@ class BaseModelAChartVariables(BaseModelChartVariables):
         self.title = "Model A"
         self.xAxisTitleText = "Day"
         self.yAxisTitleText = "Water (cubic inches)"
-        self.forecast_timeframe = int(forecast_timeframe * 365)
+        self.lineSeriesValueX = BaseModelA(-1.0).lineSeriesValueX
+        self.axis_data_points = int(forecast_timeframe * 365)
 
 
 class BaseModelA(ForecastModelTemplate):
 
     def __init__(self, forecast_timeframe: float):
         super().__init__(forecast_timeframe)
-        self.forecast_base_model = "A"
-        self.lineSeriesValueX = "day"
+        self.base_model = "A"
         self.forecast_timeframe = int(forecast_timeframe * 365)
+        self.lineSeriesValueX += "day"
         self.average_daily_water_consumption = 0.0
         self.daily_rainfall_probability = 0.0
         self.average_water_collection_per_rainfall = 0.0
@@ -61,15 +63,13 @@ class BaseModelA(ForecastModelTemplate):
                                             self.current_water_reserves)
 
 
-class ModelASustainable(BaseModelA):
+class A1(BaseModelA):
 
     def __init__(self, forecast_timeframe: float):
         super().__init__(forecast_timeframe)
-        self.forecast_environment_number = 1
-        self.forecast_environment = "sustainable"
-        self.forecast_data_key += str(self.forecast_environment_number)
-        self.lineSeriesValueY = self.forecast_data_key
-        self.lineSeriesName = self.forecast_environment
+        self.model = self.__class__.__name__
+        self.lineSeriesName = "highly sustainable"
+        self.lineSeriesValueY += str(self.__class__.__name__)
 
         self.average_daily_water_consumption = 500.0
         self.daily_rainfall_probability = 0.2
@@ -80,15 +80,30 @@ class ModelASustainable(BaseModelA):
         self.average_percent_water_lost_during_contamination = 0.05
 
 
-class ModelANonSustainable(BaseModelA):
+class A2(BaseModelA):
 
     def __init__(self, forecast_timeframe: float):
         super().__init__(forecast_timeframe)
-        self.forecast_environment_number = 2
-        self.forecast_environment = "non-sustainable"
-        self.forecast_data_key += str(self.forecast_environment_number)
-        self.lineSeriesValueY = self.forecast_data_key
-        self.lineSeriesName = self.forecast_environment
+        self.model = self.__class__.__name__
+        self.lineSeriesName = "sustainable"
+        self.lineSeriesValueY += str(self.__class__.__name__)
+
+        self.average_daily_water_consumption = 500.0
+        self.daily_rainfall_probability = 0.1
+        self.average_water_collection_per_rainfall = 10000.0
+        self.daily_water_import_probability = 0.1
+        self.average_water_collection_per_import = 750.0
+        self.daily_contamination_probability = 0.1
+        self.average_percent_water_lost_during_contamination = 0.05
+
+
+class A3(BaseModelA):
+
+    def __init__(self, forecast_timeframe: float):
+        super().__init__(forecast_timeframe)
+        self.model = self.__class__.__name__
+        self.lineSeriesName = "non-sustainable"
+        self.lineSeriesValueY += str(self.__class__.__name__)
 
         self.average_daily_water_consumption = 500.0
         self.daily_rainfall_probability = 0.05

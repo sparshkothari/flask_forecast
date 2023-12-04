@@ -64,7 +64,7 @@ var ForecastProfile = {
         chartParent.legend = new am4charts.Legend();
 
         for (let [index, j] of forecastObjDictArray.entries()) {
-            let lineSeriesValueX = j["lineSeriesValueX"];
+            let lineSeriesValueX = forecastChartVariables["lineSeriesValueX"];
             let lineSeriesValueY = j["lineSeriesValueY"]
             let lineSeriesName = j["lineSeriesName"]
             ForecastProfile.createChartLineSeries(chartParent, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType)
@@ -151,10 +151,11 @@ var ForecastProfile = {
     },
     spliceForecastArrayData: function (chartVariables, objDictArray) {
         let data = []
-        let forecastTimeframe = parseInt(chartVariables["forecast_timeframe"])
-        for (let i = 0; i < forecastTimeframe; i++) {
+        let axisDataPoints = parseInt(chartVariables["axis_data_points"])
+        let lineSeriesValueX = chartVariables["lineSeriesValueX"]
+        for (let i = 0; i < axisDataPoints; i++) {
             let dataItem = {}
-            dataItem["day"] = i;
+            dataItem[lineSeriesValueX] = i;
             for (let j of objDictArray) {
                 let lineSeriesValueY = j["lineSeriesValueY"]
                 dataItem[lineSeriesValueY] = j["data"][i][lineSeriesValueY]
@@ -170,8 +171,8 @@ var ForecastProfile = {
             {name: "Purple", hexValue: "#800080"},
             {name: "Magenta", hexValue: "#F664AF"},
             {name: "Green", hexValue: "#1CAC78"},
-            {name: "Cyan", hexValue: "#00D7AF"},
-            {name: "Red", hexValue: "#EE204D"}
+            {name: "Red", hexValue: "#EE204D"},
+            {name: "Cyan", hexValue: "#00D7AF"}
         ],
         counter: -1,
         nextHexColor: function () {

@@ -1,6 +1,5 @@
 # forecast_model_container.py
-from forecast.forecast_models.base_model_a import ModelASustainable, ModelANonSustainable, GenerateBaseModelAArray, \
-    BaseModelAChartVariables
+from forecast.forecast_models.base_model_a import GenerateBaseModelAArray, BaseModelAChartVariables
 
 
 class ForecastModelContainer:
