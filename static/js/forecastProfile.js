@@ -11,14 +11,13 @@ var ForecastProfile = {
             $.post("/simulate_forecast",
                 {
                     forecastBaseModel: document.getElementById("forecastBaseModel").value,
-                    forecastEnvironmentNumber: document.getElementById("forecastEnvironment").value,
                     forecastTimeframe: document.getElementById("forecastTimeframe").value
                 }
             )
                 .done(function (data, status) {
-                    let forecastObjDictArray = JSON.parse(data)
-                    ForecastProfile.staticVariables(forecastObjDictArray)
-                    ForecastProfile.chart(forecastObjDictArray)
+                    let forecastData = JSON.parse(data)
+                    ForecastProfile.staticVariables(forecastData)
+                    ForecastProfile.chart(forecastData)
                 })
                 .fail(function (data, status) {
                     let forecastDisplay = document.getElementById("forecastDisplay");
@@ -28,10 +27,11 @@ var ForecastProfile = {
     },
     setupRawDataFetch() {
         document.getElementById("viewRawForecastData").addEventListener("click", function () {
-            window.location.href = "/forecast_obj_dict_array"
+            window.location.href = "/forecast_data"
         }, false);
     },
-    staticVariables: function (forecastObjDictArray) {
+    staticVariables: function (forecastData) {
+        let forecastObjDictArray = forecastData[1]
         let staticVariables = document.getElementById("forecastObjArrayStaticVariables");
         staticVariables.innerHTML = ""
         for (let e of forecastObjDictArray) {
@@ -39,7 +39,7 @@ var ForecastProfile = {
             a.setAttribute("class", "w3-bar-item")
             let aHTML = "";
             for (let [key, value] of Object.entries(e)) {
-                if (key !== "water_reserves_data") {
+                if (key !== "data") {
                     aHTML += "<br>" + key + ": " + value
                 }
             }
@@ -47,35 +47,36 @@ var ForecastProfile = {
             staticVariables.appendChild(a)
         }
     },
-    chart: function (forecastObjDictArray) {
+    chart: function (forecastData) {
         am4core.useTheme(am4themes_animated);
-
-        let genericChartTitle = "Model: " + forecastObjDictArray[0]["forecast_base_model"]
+        let forecastChartVariables = forecastData[0]
+        let forecastObjDictArray = forecastData[1]
+        let chartTitle = forecastChartVariables["title"]
         let chartDisplayType = parseInt(document.getElementById("forecastDisplayType").value);
         let chartDivElementIds = ForecastProfile.createChartDivElements(forecastObjDictArray.length)
 
-        let mergedData = ForecastProfile.spliceForecastArrayData(forecastObjDictArray)
-        let xAxisTitleText = "Day"
-        let yAxisTitleText = "Water (cubic inches)"
-        let chartMerged = ForecastProfile.createXYValueAxisChart(chartDivElementIds[0], mergedData, xAxisTitleText, yAxisTitleText)
-        let chartMergedTitle = chartMerged.titles.create()
-        chartMergedTitle.text = genericChartTitle
-        chartMerged.legend = new am4charts.Legend();
+        let mergedData = ForecastProfile.spliceForecastArrayData(forecastChartVariables, forecastObjDictArray)
+        let xAxisTitleText = forecastChartVariables["xAxisTitleText"]
+        let yAxisTitleText = forecastChartVariables["yAxisTitleText"]
+        let chartParent = ForecastProfile.createXYValueAxisChart(chartDivElementIds[0], mergedData, xAxisTitleText, yAxisTitleText)
+        let chartParentTitle = chartParent.titles.create()
+        chartParentTitle.text = chartTitle
+        chartParent.legend = new am4charts.Legend();
 
         for (let [index, j] of forecastObjDictArray.entries()) {
-            let lineSeriesValueX = "day";
-            let lineSeriesValueY = j["forecast_data_key"]
-            let lineSeriesName = j["forecast_environment"]
-            ForecastProfile.createChartLineSeries(chartMerged, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType)
+            let lineSeriesValueX = j["lineSeriesValueX"];
+            let lineSeriesValueY = j["lineSeriesValueY"]
+            let lineSeriesName = j["lineSeriesName"]
+            ForecastProfile.createChartLineSeries(chartParent, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType)
             if (forecastObjDictArray.length > 1) {
-                let jData = j["water_reserves_data"]
+                let jData = j["data"]
                 let jLineSeriesValueX = lineSeriesValueX
                 let jLineSeriesValueY = lineSeriesValueY
                 let jLineSeriesName = lineSeriesName
                 let chartJ = ForecastProfile.createXYValueAxisChart(chartDivElementIds[index + 1], jData, xAxisTitleText, yAxisTitleText)
                 ForecastProfile.createChartLineSeries(chartJ, jLineSeriesValueX, jLineSeriesValueY, jLineSeriesName, chartDisplayType)
                 let chartJTitle = chartJ.titles.create()
-                chartJTitle.text = genericChartTitle
+                chartJTitle.text = chartTitle
                 chartJ.legend = new am4charts.Legend()
             }
         }
@@ -148,15 +149,15 @@ var ForecastProfile = {
         }
         return o;
     },
-    spliceForecastArrayData: function (forecastObjDictArray) {
+    spliceForecastArrayData: function (chartVariables, objDictArray) {
         let data = []
-        let numberOfDays = parseInt(forecastObjDictArray[0]["duration_number_of_days"])
-        for (let i = 0; i < numberOfDays; i++) {
+        let forecastTimeframe = parseInt(chartVariables["forecast_timeframe"])
+        for (let i = 0; i < forecastTimeframe; i++) {
             let dataItem = {}
             dataItem["day"] = i;
-            for (let j of forecastObjDictArray) {
-                let forecast_data_key = j["forecast_data_key"]
-                dataItem[forecast_data_key] = j["water_reserves_data"][i][forecast_data_key]
+            for (let j of objDictArray) {
+                let lineSeriesValueY = j["lineSeriesValueY"]
+                dataItem[lineSeriesValueY] = j["data"][i][lineSeriesValueY]
             }
             data.push(dataItem)
         }
@@ -164,7 +165,7 @@ var ForecastProfile = {
     },
     colorKey: {
         key: [
-            {name: "Yellow", hexValue: "#FCE883"},
+            /*{name: "Yellow", hexValue: "#FCE883"},*/
             {name: "Lime", hexValue: "#00FF00"},
             {name: "Purple", hexValue: "#800080"},
             {name: "Magenta", hexValue: "#F664AF"},

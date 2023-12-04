@@ -1,7 +1,26 @@
 # base_model_a.py
 from random import Random
 
-from forecast.forecast_models.forecast_model_template import ForecastModelTemplate
+from forecast.forecast_models.forecast_model_template import ForecastModelTemplate, GenerateBaseModelArray, \
+    BaseModelChartVariables
+
+
+class GenerateBaseModelAArray(GenerateBaseModelArray):
+
+    def __init__(self, forecast_timeframe: float):
+        super().__init__(forecast_timeframe)
+        self.array.append(ModelASustainable(forecast_timeframe))
+        self.array.append(ModelANonSustainable(forecast_timeframe))
+
+
+class BaseModelAChartVariables(BaseModelChartVariables):
+
+    def __init__(self, forecast_timeframe: float):
+        super().__init__(forecast_timeframe)
+        self.title = "Model A"
+        self.xAxisTitleText = "Day"
+        self.yAxisTitleText = "Water (cubic inches)"
+        self.forecast_timeframe = int(forecast_timeframe * 365)
 
 
 class BaseModelA(ForecastModelTemplate):
@@ -9,6 +28,8 @@ class BaseModelA(ForecastModelTemplate):
     def __init__(self, forecast_timeframe: float):
         super().__init__(forecast_timeframe)
         self.forecast_base_model = "A"
+        self.lineSeriesValueX = "day"
+        self.forecast_timeframe = int(forecast_timeframe * 365)
         self.average_daily_water_consumption = 0.0
         self.daily_rainfall_probability = 0.0
         self.average_water_collection_per_rainfall = 0.0
@@ -47,6 +68,9 @@ class ModelASustainable(BaseModelA):
         self.forecast_environment_number = 1
         self.forecast_environment = "sustainable"
         self.forecast_data_key += str(self.forecast_environment_number)
+        self.lineSeriesValueY = self.forecast_data_key
+        self.lineSeriesName = self.forecast_environment
+
         self.average_daily_water_consumption = 500.0
         self.daily_rainfall_probability = 0.2
         self.average_water_collection_per_rainfall = 10000.0
@@ -63,6 +87,9 @@ class ModelANonSustainable(BaseModelA):
         self.forecast_environment_number = 2
         self.forecast_environment = "non-sustainable"
         self.forecast_data_key += str(self.forecast_environment_number)
+        self.lineSeriesValueY = self.forecast_data_key
+        self.lineSeriesName = self.forecast_environment
+
         self.average_daily_water_consumption = 500.0
         self.daily_rainfall_probability = 0.05
         self.average_water_collection_per_rainfall = 10000.0
