@@ -20,30 +20,26 @@ def forecast_profile():
 @views_bp.route('/simulate_forecast', methods=['POST'])
 def simulate_forecast():
     forecast_base_model = str(request.form["forecastBaseModel"])
-    forecast_environment = int(request.form["forecastEnvironment"])
     forecast_timeframe = float(request.form["forecastTimeframe"])
     forecast_container_obj = ForecastModelContainer(
         forecast_base_model=forecast_base_model,
-        forecast_environment=forecast_environment,
         forecast_timeframe=forecast_timeframe)
-    model_obj_dict_string = json.dumps(forecast_container_obj.run())
+    o = json.dumps(forecast_container_obj.run())
 
     ForecastObj.drop_collection()
-    forecast_database_obj = ForecastObj(model_obj_dict_string=model_obj_dict_string)
+    forecast_database_obj = ForecastObj(data_string=o)
     forecast_database_obj.save()
 
-    response_data = model_obj_dict_string
+    response_data = o
     response_status = 200
     return Response(response_data, response_status)
 
 
-@views_bp.route('/forecast_obj_dict', methods=['GET'])
-def forecast_obj_dict():
+@views_bp.route('/forecast_data', methods=['GET'])
+def forecast_data():
     if ForecastObj.objects:
-        forecast_database_obj = ForecastObj.objects.first()
-        model_obj_dict_string = forecast_database_obj.model_obj_dict_string
-
-        response_data = model_obj_dict_string
+        o = ForecastObj.objects.first().data_string
+        response_data = o
         response_status = 200
         return Response(response_data, response_status)
     else:

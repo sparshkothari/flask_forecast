@@ -1,20 +1,24 @@
 # forecast_model_container.py
-from forecast.forecast_models.base_model_a import ModelASustainable, ModelANonSustainable
+from forecast.forecast_models.base_model_a import GenerateBaseModelAArray, BaseModelAChartVariables
 
 
 class ForecastModelContainer:
 
     def __init__(self,
                  forecast_base_model: str,
-                 forecast_environment: int,
                  forecast_timeframe: float):
-        self.forecast_model = ""
+        self.forecast_models = []
+        self.simulated_models = []
+        self.chartVariables = {}
         if forecast_base_model == "A":
-            if forecast_environment == 1:
-                self.forecast_model = ModelASustainable(forecast_timeframe)
-            elif forecast_environment == 2:
-                self.forecast_model = ModelANonSustainable(forecast_timeframe)
+            self.chartVariables = BaseModelAChartVariables(forecast_timeframe).__dict__
+            self.forecast_models = GenerateBaseModelAArray(forecast_timeframe).array
 
     def run(self):
-        self.forecast_model.simulate_model()
-        return self.forecast_model.__dict__
+        o = []
+        for model in self.forecast_models:
+            model.simulate_model()
+            self.simulated_models.append(model.__dict__)
+        o.append(self.chartVariables)
+        o.append(self.simulated_models)
+        return o

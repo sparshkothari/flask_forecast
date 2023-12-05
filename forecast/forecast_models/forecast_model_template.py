@@ -1,19 +1,40 @@
 # forecast_model_template.py
 
 
+class GenerateBaseModelArray:
+
+    def __init__(self, forecast_timeframe: float):
+        self.array = []
+        pass
+
+
+class BaseModelChartVariables:
+
+    def __init__(self, forecast_timeframe: float):
+        self.title = "Model: "
+        self.xAxisTitleText = ""
+        self.yAxisTitleText = ""
+        self.lineSeriesValueX = ""
+        self.forecast_timeframe = ""
+
+
 class ForecastModelTemplate:
 
     def __init__(self, forecast_timeframe: float):
-        self.forecast_model_name = self.__class__.__name__
-        self.duration_number_of_days = int(forecast_timeframe * 365)
-        self.current_water_reserves = 0.0
-        self.water_reserves_data = []
+        self.base_model = ""
+        self.model = ""
+        self.forecast_timeframe = -1
+        self.lineSeriesValueX = "value_x_"
+        self.lineSeriesValueY = "value_y_"
+        self.lineSeriesName = ""
+        self.data_point = 0.0
+        self.data = []
 
     def simulate_model(self):
-        for i in range(0, self.duration_number_of_days):
+        for i in range(0, self.forecast_timeframe):
             self.iterate()
-            data_item = {"day": i, "water_reserves": self.current_water_reserves}
-            self.water_reserves_data.append(data_item)
+            data_item = {self.lineSeriesValueX: i, self.lineSeriesValueY: self.data_point}
+            self.data.append(data_item)
 
     def iterate(self):
         pass
