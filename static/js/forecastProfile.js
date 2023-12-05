@@ -172,19 +172,22 @@ var ForecastProfile = {
             {name: "Magenta", hexValue: "#F664AF"},
             {name: "Green", hexValue: "#1CAC78"},
             {name: "Red", hexValue: "#EE204D"},
-            {name: "Cyan", hexValue: "#00D7AF"}
+            {name: "Cyan", hexValue: "#00D7AF"},
+            {name: "DarkOrchid", hexValue: "#9932CC"},
+            {name: "DarkMagenta", hexValue: "#8B008B"}
         ],
-        counter: -1,
+        counterKey: [],
         nextHexColor: function () {
-            if (this.counter === -1) {
-                this.counter = parseInt(Math.random() * this.key.length)
+            let keyIndex;
+            let color;
+            let hexVal;
+            if (this.counterKey.length === 0) {
+                this.counterKey = this.key.slice()
             }
-            if (this.counter < (this.key.length - 1)) {
-                this.counter++;
-            } else {
-                this.counter = 0
-            }
-            return this.key[this.counter].hexValue
+            keyIndex = parseInt(Math.random() * this.counterKey.length)
+            color = this.counterKey.splice(keyIndex, 1)[0]
+            hexVal = color.hexValue
+            return hexVal
         }
     }
 }
