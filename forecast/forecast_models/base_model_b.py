@@ -37,8 +37,8 @@ class BaseModelB(ForecastModelTemplate):
         self.small_calamity_probability = 0.0
         self.large_calamity_probability = 0.0
 
-        self.percentage_population_lost_small_calamity = 0.00
-        self.percentage_population_lost_large_calamity = 0.00
+        self.percentage_population_lost_small_calamity = 0.0005
+        self.percentage_population_lost_large_calamity = 0.001
 
     def iterate(self):
         self.birth()
@@ -74,8 +74,8 @@ class B1(BaseModelB):
 
         self.birth_rate_daily = 0.0004
         self.death_rate_daily = 0.0004
-        self.small_calamity_probability = 0.005
-        self.large_calamity_probability = 0.001
+        self.small_calamity_probability = 0.001
+        self.large_calamity_probability = 0.0005
 
 
 class B2(BaseModelB):
@@ -87,5 +87,5 @@ class B2(BaseModelB):
 
         self.birth_rate_daily = 0.000401
         self.death_rate_daily = 0.0004
-        self.small_calamity_probability = 0.005
-        self.large_calamity_probability = 0.001
+        self.small_calamity_probability = 0.001
+        self.large_calamity_probability = 0.0005
