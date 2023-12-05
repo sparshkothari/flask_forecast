@@ -40,7 +40,7 @@ class BaseModelB(ForecastModelTemplate):
         self.percentage_population_lost_small_calamity = 0.0005
         self.percentage_population_lost_large_calamity = 0.001
 
-    def iterate(self):
+    def iterate(self, index):
         self.birth()
         self.death()
         self.small_calamity()

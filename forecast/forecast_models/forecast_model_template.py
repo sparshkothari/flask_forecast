@@ -43,11 +43,11 @@ class ForecastModelTemplate:
 
     def simulate_model(self):
         for i in range(0, self.timeframe):
-            self.iterate()
+            self.iterate(i)
             if math.floor(i % self.timeframe_increment) == 0:
                 data_item = {self.lineSeriesValueX: i, self.lineSeriesValueY: self.data_point}
                 self.data.append(data_item)
         self.final_differential = self.data_point - self.initial_data_point
 
-    def iterate(self):
+    def iterate(self, index):
         pass

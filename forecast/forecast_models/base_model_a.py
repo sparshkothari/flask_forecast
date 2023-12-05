@@ -43,7 +43,7 @@ class BaseModelA(ForecastModelTemplate):
         self.daily_contamination_probability = 0.0
         self.average_percent_water_lost_during_contamination = 0.0
 
-    def iterate(self):
+    def iterate(self, index):
         self.consume()
         self.rainfall()
         self.import_water()
