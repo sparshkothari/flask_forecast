@@ -55,13 +55,10 @@ var ForecastProfile = {
         let chartDisplayType = parseInt(document.getElementById("forecastDisplayType").value);
         let chartDivElementIds = ForecastProfile.createChartDivElements(forecastObjDictArray.length)
 
-        let mergedData = ForecastProfile.spliceForecastArrayData(forecastChartVariables, forecastObjDictArray)
+        let splicedData = ForecastProfile.spliceForecastArrayData(forecastChartVariables, forecastObjDictArray)
         let xAxisTitleText = forecastChartVariables["xAxisTitleText"]
         let yAxisTitleText = forecastChartVariables["yAxisTitleText"]
-        let chartParent = ForecastProfile.createXYValueAxisChart(chartDivElementIds[0], mergedData, xAxisTitleText, yAxisTitleText)
-        let chartParentTitle = chartParent.titles.create()
-        chartParentTitle.text = chartTitle
-        chartParent.legend = new am4charts.Legend();
+        let chartParent = ForecastProfile.createXYValueAxisChart(chartDivElementIds[0], chartTitle, splicedData, xAxisTitleText, yAxisTitleText)
 
         for (let [index, j] of forecastObjDictArray.entries()) {
             let lineSeriesValueX = forecastChartVariables["lineSeriesValueX"];
@@ -73,23 +70,25 @@ var ForecastProfile = {
                 let jLineSeriesValueX = lineSeriesValueX
                 let jLineSeriesValueY = lineSeriesValueY
                 let jLineSeriesName = lineSeriesName
-                let chartJ = ForecastProfile.createXYValueAxisChart(chartDivElementIds[index + 1], jData, xAxisTitleText, yAxisTitleText)
+                let chartJ = ForecastProfile.createXYValueAxisChart(chartDivElementIds[index + 1], chartTitle, jData, xAxisTitleText, yAxisTitleText)
                 ForecastProfile.createChartLineSeries(chartJ, jLineSeriesValueX, jLineSeriesValueY, jLineSeriesName, chartDisplayType)
-                let chartJTitle = chartJ.titles.create()
-                chartJTitle.text = chartTitle
-                chartJ.legend = new am4charts.Legend()
             }
         }
     },
-    createXYValueAxisChart: function (divName, data, xAxisTitleText, yAxisTitleText) {
+    createXYValueAxisChart: function (divName, chartTitle, data, xAxisTitleText, yAxisTitleText) {
         let chart = am4core.create(divName, am4charts.XYChart);
         chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
         let xAxis = chart.xAxes.push(new am4charts.ValueAxis());
         let yAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-        chart.data = data
         xAxis.title.text = xAxisTitleText;
         yAxis.title.text = yAxisTitleText;
+
+        let o = chart.titles.create()
+        o.text = chartTitle
+        chart.data = data
+        chart.legend = new am4charts.Legend();
         return chart;
     },
     createChartLineSeries: function (chart, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType) {
