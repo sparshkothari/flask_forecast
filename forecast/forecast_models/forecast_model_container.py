@@ -9,8 +9,9 @@ class ForecastModelContainer:
                  forecast_timeframe: float):
         self.forecast_models = []
         self.simulated_models = []
-        self.chartVariables = BaseModelAChartVariables(forecast_timeframe).__dict__
+        self.chartVariables = {}
         if forecast_base_model == "A":
+            self.chartVariables = BaseModelAChartVariables(forecast_timeframe).__dict__
             self.forecast_models = GenerateBaseModelAArray(forecast_timeframe).array
 
     def run(self):

@@ -18,7 +18,7 @@ class BaseModelAChartVariables(BaseModelChartVariables):
 
     def __init__(self, forecast_timeframe: float):
         super().__init__(forecast_timeframe)
-        self.title = "Model A"
+        self.title += "A"
         self.xAxisTitleText = "Day"
         self.yAxisTitleText = "Water (cubic inches)"
         self.lineSeriesValueX = BaseModelA(-1.0).lineSeriesValueX
@@ -47,20 +47,20 @@ class BaseModelA(ForecastModelTemplate):
         self.contaminate()
 
     def consume(self):
-        self.current_water_reserves -= self.average_daily_water_consumption
+        self.data_point -= self.average_daily_water_consumption
 
     def rainfall(self):
         if Random().random() < self.daily_rainfall_probability:
-            self.current_water_reserves += self.average_water_collection_per_rainfall
+            self.data_point += self.average_water_collection_per_rainfall
 
     def import_water(self):
         if Random().random() < self.daily_water_import_probability:
-            self.current_water_reserves += self.average_water_collection_per_import
+            self.data_point += self.average_water_collection_per_import
 
     def contaminate(self):
         if Random().random() < self.daily_contamination_probability:
-            self.current_water_reserves -= (self.average_percent_water_lost_during_contamination *
-                                            self.current_water_reserves)
+            self.data_point -= (self.average_percent_water_lost_during_contamination *
+                                self.data_point)
 
 
 class A1(BaseModelA):

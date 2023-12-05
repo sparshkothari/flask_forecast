@@ -11,7 +11,7 @@ class GenerateBaseModelArray:
 class BaseModelChartVariables:
 
     def __init__(self, forecast_timeframe: float):
-        self.title = ""
+        self.title = "Model: "
         self.xAxisTitleText = ""
         self.yAxisTitleText = ""
         self.lineSeriesValueX = ""
@@ -27,13 +27,13 @@ class ForecastModelTemplate:
         self.lineSeriesValueX = "value_x_"
         self.lineSeriesValueY = "value_y_"
         self.lineSeriesName = ""
-        self.current_water_reserves = 0.0
+        self.data_point = 0.0
         self.data = []
 
     def simulate_model(self):
         for i in range(0, self.forecast_timeframe):
             self.iterate()
-            data_item = {self.lineSeriesValueX: i, self.lineSeriesValueY: self.current_water_reserves}
+            data_item = {self.lineSeriesValueX: i, self.lineSeriesValueY: self.data_point}
             self.data.append(data_item)
 
     def iterate(self):
