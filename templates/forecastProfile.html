@@ -5,24 +5,35 @@
         <div class="w3-container w3-center" style="color:black; font-family: serif">
             <input type="button" id="simulateForecast" value="Simulate Forecast">
             <input type="button" id="viewRawForecastData" value="View Raw Forecast Data">
-            <label for="forecastBaseModel">Choose a base model:</label>
-            <select name="forecastBaseModel" id="forecastBaseModel">
-                <option value="A" selected="selected">A</option>
+            <label for="baseModel">Choose a base model:</label>
+            <select name="baseModel" id="baseModel">
+                <option value="A">A</option>
+                <option value="B" selected="selected">B</option>
             </select>
-            <label for="forecastTimeframe">Choose a timeframe:</label>
-            <select name="forecastTimeframe" id="forecastTimeframe">
-                <option value="0.5">6 Months</option>
+            <label for="timeframeMultiplier">Choose a timeframe:</label>
+            <select name="timeframeMultiplier" id="timeframeMultiplier">
                 <option value="1" selected="selected">1 Year</option>
-                <option value="2">2 Years</option>
-                <option value="3">3 Years</option>
-                <option value="4">4 Years</option>
                 <option value="5">5 Years</option>
                 <option value="10">10 Years</option>
+                <option value="20">20 Years</option>
+                <option value="50">50 Years</option>
+                <option value="100">100 Years</option>
+                <option value="200">200 Years</option>
+
             </select>
-              <label for="forecastDisplayType">Choose a display type:</label>
-            <select name="forecastDisplayType" id="forecastDisplayType">
-                <option value="0" selected="selected">Line and Fill</option>
-                <option value="1">Line</option>
+            <br>
+            <label for="timeframeIncrementMultiplier">Choose a timeframe increment:</label>
+            <select name="timeframeIncrementMultiplier" id="timeframeIncrementMultiplier">
+                <option value="0.0">Daily</option>
+                <option value="0.0833" selected="selected">Monthly</option>
+                <option value="0.25">Quarterly</option>
+                <option value="0.5">Biannually</option>
+                <option value="1.0">Annually</option>
+            </select>
+            <label for="displayType">Choose a display type:</label>
+            <select name="displayType" id="displayType">
+                <option value="0">Line and Fill</option>
+                <option value="1" selected="selected">Line</option>
                 <option value="2">Fill</option>
             </select>
         </div>
