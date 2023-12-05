@@ -11,7 +11,7 @@ sys.dont_write_bytecode = True
 app = Flask(__name__)
 app.secret_key = "super secret key"
 app.config['MONGODB_SETTINGS'] = {
-    "db": "waterForecast",
+    "db": "forecast",
 }
 db = MongoEngine(app)
 app.session_interface = MongoEngineSessionInterface(db)
