@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request
 from werkzeug.wrappers.response import Response
 import json
-from models import ForecastObj
-from forecast.forecast_models.forecast_model_container import ForecastModelContainer
+from models import DataObj
+from forecast.forecast_models.container import Container
 
 views_bp = Blueprint('views_bp', __name__)
 
@@ -12,38 +12,38 @@ def index():
     return render_template("index.html")
 
 
-@views_bp.route('/forecast_profile', methods=['GET'])
-def forecast_profile():
-    return render_template("forecastProfile.html")
+@views_bp.route('/profile', methods=['GET'])
+def profile():
+    return render_template("profile.html")
 
 
-@views_bp.route('/simulate_forecast', methods=['POST'])
-def simulate_forecast():
+@views_bp.route('/simulate', methods=['POST'])
+def simulate():
     base_model = str(request.form["baseModel"])
     timeframe_multiplier = float(request.form["timeframeMultiplier"])
     timeframe_unit = int(request.form["timeframeUnit"])
     timeframe_increment_multiplier = float(request.form["timeframeIncrementMultiplier"])
 
-    forecast_container_obj = ForecastModelContainer(
+    container_obj = Container(
         base_model=base_model,
         timeframe_multiplier=timeframe_multiplier,
         timeframe_unit=timeframe_unit,
         timeframe_increment_multiplier=timeframe_increment_multiplier)
-    o = json.dumps(forecast_container_obj.run())
+    o = json.dumps(container_obj.run())
 
-    ForecastObj.drop_collection()
-    forecast_database_obj = ForecastObj(data_string=o)
-    forecast_database_obj.save()
+    DataObj.drop_collection()
+    database_obj = DataObj(data_string=o)
+    database_obj.save()
 
     response_data = o
     response_status = 200
     return Response(response_data, response_status)
 
 
-@views_bp.route('/forecast_data', methods=['GET'])
-def forecast_data():
-    if ForecastObj.objects:
-        o = ForecastObj.objects.first().data_string
+@views_bp.route('/data', methods=['GET'])
+def data():
+    if DataObj.objects:
+        o = DataObj.objects.first().data_string
         response_data = o
         response_status = 200
         return Response(response_data, response_status)

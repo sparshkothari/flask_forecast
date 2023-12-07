@@ -1,18 +1,18 @@
 # base_model_a.py
 import math
-import forecast_utils
-from forecast.forecast_models.forecast_model_template import ForecastModelTemplate, GenerateBaseModelArray, \
-    BaseModelChartVariables
+import utils
+from forecast.forecast_models.template import Template, GenerateArray, \
+    ChartVariables
 
 
-class GenerateBaseModelCArray(GenerateBaseModelArray):
+class GenerateCArray(GenerateArray):
 
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
         self.array.append(C1(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
 
 
-class BaseModelCChartVariables(BaseModelChartVariables):
+class CChartVariables(ChartVariables):
 
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
@@ -20,7 +20,7 @@ class BaseModelCChartVariables(BaseModelChartVariables):
         self.yAxisTitleText = "{placeholder}"
 
 
-class BaseModelC(ForecastModelTemplate):
+class C(Template):
 
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
@@ -34,7 +34,7 @@ class BaseModelC(ForecastModelTemplate):
         self.phase = 0.0
 
 
-class C1(BaseModelC):
+class C1(C):
 
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
@@ -49,16 +49,16 @@ class C1(BaseModelC):
     def method(self, a, f, p, x):
         m = self.multiplier
         m_i = self.multiplier_iterations
-        y = forecast_utils.sine_f(a, f, p, x)
+        y = utils.sine_f(a, f, p, x)
         sine = False
         for i in range(0, m_i):
             a = m * a
             f = m * f
             p = m * p
             if sine:
-                y = y * forecast_utils.sine_f(a, f, p, x)
+                y = y * utils.sine_f(a, f, p, x)
                 sine = False
             else:
-                y = y * forecast_utils.cosine_f(a, f, p, x)
+                y = y * utils.cosine_f(a, f, p, x)
                 sine = True
         return y

@@ -4,7 +4,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
 <div>
     <div class="w3-bar" style="font-family:serif; color:black">
-        <a href="{{ url_for('views_bp.forecast_profile') }}" class="w3-bar-item w3-button w3-hover-blue">Forecast Profile</a>
+        <a href="{{ url_for('views_bp.profile') }}" class="w3-bar-item w3-button w3-hover-blue">Forecast Profile</a>
     </div>
     {% for message in get_flashed_messages() %}
     {% endfor %}

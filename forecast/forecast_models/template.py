@@ -1,24 +1,24 @@
-# forecast_model_template.py
+# template.py
 import math
 
 
-class GenerateBaseModelArray:
+class GenerateArray:
 
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         self.array = []
         pass
 
 
-class BaseModelChartVariables:
+class ChartVariables:
 
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         self.title = "Model: "
-        self.lineSeriesValueX = ForecastModelTemplate(-1, timeframe_unit, -1).lineSeriesValueX
+        self.lineSeriesValueX = Template(-1, timeframe_unit, -1).lineSeriesValueX
         self.xAxisTitleText = self.lineSeriesValueX
         self.yAxisTitleText = ""
 
 
-class ForecastModelTemplate:
+class Template:
 
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         self.base_model = ""

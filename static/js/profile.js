@@ -1,14 +1,14 @@
-var ForecastProfile = {
+var Profile = {
     init: function () {
-        this.forecastProfile();
+        this.profile();
     },
-    forecastProfile: function () {
-        this.setupSimulateForecast()
+    profile: function () {
+        this.setupSimulate()
         this.setupRawDataFetch()
     },
-    setupSimulateForecast() {
-        document.getElementById("simulateForecast").addEventListener("click", function () {
-            $.post("/simulate_forecast",
+    setupSimulate() {
+        document.getElementById("simulate").addEventListener("click", function () {
+            $.post("/simulate",
                 {
                     baseModel: document.getElementById("baseModel").value,
                     timeframeMultiplier: document.getElementById("timeframeMultiplier").value,
@@ -17,24 +17,24 @@ var ForecastProfile = {
                 }
             )
                 .done(function (data, status) {
-                    let forecastData = JSON.parse(data)
-                    ForecastProfile.staticVariables(forecastData)
-                    ForecastProfile.chart(forecastData)
+                    data = JSON.parse(data)
+                    Profile.staticVariables(data)
+                    Profile.chart(data)
                 })
                 .fail(function (data, status) {
-                    let forecastDisplay = document.getElementById("forecastDisplay");
-                    forecastDisplay.innerHTML = data.status + "<br>" + data.statusText + "<br>" + data.responseText
+                    let display = document.getElementById("display");
+                    display.innerHTML = data.status + "<br>" + data.statusText + "<br>" + data.responseText
                 });
         }, false);
     },
     setupRawDataFetch() {
-        document.getElementById("viewRawForecastData").addEventListener("click", function () {
-            window.location.href = "/forecast_data"
+        document.getElementById("viewRawData").addEventListener("click", function () {
+            window.location.href = "/data"
         }, false);
     },
     staticVariables: function (forecastData) {
         let forecastObjDictArray = forecastData[1]
-        let staticVariables = document.getElementById("forecastObjArrayStaticVariables");
+        let staticVariables = document.getElementById("staticVariables");
         staticVariables.innerHTML = ""
         for (let e of forecastObjDictArray) {
             let a = document.createElement("a")
@@ -55,25 +55,25 @@ var ForecastProfile = {
         let forecastObjDictArray = forecastData[1]
         let chartTitle = forecastChartVariables["title"]
         let chartDisplayType = parseInt(document.getElementById("displayType").value);
-        let chartDivElementIds = ForecastProfile.createChartDivElements(forecastObjDictArray.length)
+        let chartDivElementIds = Profile.createChartDivElements(forecastObjDictArray.length)
 
-        let splicedData = ForecastProfile.spliceForecastArrayData(forecastChartVariables, forecastObjDictArray)
+        let splicedData = Profile.spliceForecastArrayData(forecastChartVariables, forecastObjDictArray)
         let xAxisTitleText = forecastChartVariables["xAxisTitleText"]
         let yAxisTitleText = forecastChartVariables["yAxisTitleText"]
-        let chartParent = ForecastProfile.createXYValueAxisChart(chartDivElementIds[0], chartTitle, splicedData, xAxisTitleText, yAxisTitleText)
+        let chartParent = Profile.createXYValueAxisChart(chartDivElementIds[0], chartTitle, splicedData, xAxisTitleText, yAxisTitleText)
 
         for (let [index, j] of forecastObjDictArray.entries()) {
             let lineSeriesValueX = forecastChartVariables["lineSeriesValueX"];
             let lineSeriesValueY = j["lineSeriesValueY"]
             let lineSeriesName = j["lineSeriesName"]
-            ForecastProfile.createChartLineSeries(chartParent, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType)
+            Profile.createChartLineSeries(chartParent, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType)
             if (forecastObjDictArray.length > 1) {
                 let jData = j["data"]
                 let jLineSeriesValueX = lineSeriesValueX
                 let jLineSeriesValueY = lineSeriesValueY
                 let jLineSeriesName = lineSeriesName
-                let chartJ = ForecastProfile.createXYValueAxisChart(chartDivElementIds[index + 1], chartTitle, jData, xAxisTitleText, yAxisTitleText)
-                ForecastProfile.createChartLineSeries(chartJ, jLineSeriesValueX, jLineSeriesValueY, jLineSeriesName, chartDisplayType)
+                let chartJ = Profile.createXYValueAxisChart(chartDivElementIds[index + 1], chartTitle, jData, xAxisTitleText, yAxisTitleText)
+                Profile.createChartLineSeries(chartJ, jLineSeriesValueX, jLineSeriesValueY, jLineSeriesName, chartDisplayType)
             }
         }
     },
@@ -99,14 +99,14 @@ var ForecastProfile = {
         lineSeries.dataFields.valueY = lineSeriesValueY;
         if (chartDisplayType === 0) {
             lineSeries.fillOpacity = 0.3;
-            lineSeries.fill = am4core.color(ForecastProfile.colorKey.nextHexColor())
-            lineSeries.stroke = am4core.color(ForecastProfile.colorKey.nextHexColor())
+            lineSeries.fill = am4core.color(Profile.colorKey.nextHexColor())
+            lineSeries.stroke = am4core.color(Profile.colorKey.nextHexColor())
             lineSeries.strokeWidth = 1;
         } else if (chartDisplayType === 1) {
-            lineSeries.stroke = am4core.color(ForecastProfile.colorKey.nextHexColor())
+            lineSeries.stroke = am4core.color(Profile.colorKey.nextHexColor())
             lineSeries.strokeWidth = 1;
         } else if (chartDisplayType === 2) {
-            let nextHextColor = ForecastProfile.colorKey.nextHexColor()
+            let nextHextColor = Profile.colorKey.nextHexColor()
             lineSeries.fillOpacity = 0.3;
             lineSeries.fill = am4core.color(nextHextColor)
             lineSeries.stroke = am4core.color(nextHextColor)
@@ -119,11 +119,11 @@ var ForecastProfile = {
         let columnCount = 2;
         let cellCount = length;
 
-        let divElements = document.getElementById("forecastChartDivRows");
+        let divElements = document.getElementById("chartDivRows");
         divElements.innerHTML = "";
 
         let parentChartDiv = document.createElement("div")
-        parentChartDiv.id = "parentForecastChartDiv"
+        parentChartDiv.id = "parentChartDiv"
         parentChartDiv.style.height = "600px"
         parentChartDiv.style.width = "100%"
         divElements.appendChild(parentChartDiv)
@@ -133,14 +133,14 @@ var ForecastProfile = {
 
                 if (i % columnCount === 0) {
                     let y = document.createElement("div");
-                    y.id = "dashDivRow" + i;
+                    y.id = "chartDivRow" + i;
                     y.classList = "w3-row";
                     divElements.appendChild(y);
 
                     for (let j = 0; j < columnCount; j++) {
                         let u = document.createElement("div");
                         u.classList = "w3-col s" + 12 / columnCount + " w3-center";
-                        u.id = "forecastChartDivCol" + (i + j);
+                        u.id = "chartDivCol" + (i + j);
                         u.style.height = "600px"
                         y.appendChild(u);
                         o.push(u.id);
@@ -193,4 +193,4 @@ var ForecastProfile = {
     }
 }
 
-ForecastProfile.init()
+Profile.init()
