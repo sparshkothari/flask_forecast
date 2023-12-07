@@ -1,4 +1,5 @@
 # base_model_a.py
+import math
 from random import Random
 
 from forecast.forecast_models.forecast_model_template import ForecastModelTemplate, GenerateBaseModelArray, \
@@ -7,40 +8,43 @@ from forecast.forecast_models.forecast_model_template import ForecastModelTempla
 
 class GenerateBaseModelAArray(GenerateBaseModelArray):
 
-    def __init__(self, forecast_timeframe: float):
-        super().__init__(forecast_timeframe)
-        self.array.append(A1(forecast_timeframe))
-        self.array.append(A2(forecast_timeframe))
-        self.array.append(A3(forecast_timeframe))
+    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
+        self.array.append(A1(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
+        self.array.append(A2(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
+        self.array.append(A3(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
 
 
 class BaseModelAChartVariables(BaseModelChartVariables):
 
-    def __init__(self, forecast_timeframe: float):
-        super().__init__(forecast_timeframe)
+    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
         self.title += "A"
-        self.xAxisTitleText = "Day"
         self.yAxisTitleText = "Water (cubic inches)"
-        self.lineSeriesValueX = BaseModelA(-1.0).lineSeriesValueX
-        self.axis_data_points = int(forecast_timeframe * 365)
 
 
 class BaseModelA(ForecastModelTemplate):
 
-    def __init__(self, forecast_timeframe: float):
-        super().__init__(forecast_timeframe)
+    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
         self.base_model = "A"
-        self.forecast_timeframe = int(forecast_timeframe * 365)
-        self.lineSeriesValueX += "day"
+
+        self.initial_data_point = math.pow(10, 5)
+        self.data_point = self.initial_data_point
+
         self.average_daily_water_consumption = 0.0
+
         self.daily_rainfall_probability = 0.0
         self.average_water_collection_per_rainfall = 0.0
+
         self.daily_water_import_probability = 0.0
         self.average_water_collection_per_import = 0.0
+
         self.daily_contamination_probability = 0.0
         self.average_percent_water_lost_during_contamination = 0.0
 
-    def iterate(self):
+    def iterate(self, index):
+        super().iterate(index)
         self.consume()
         self.rainfall()
         self.import_water()
@@ -65,28 +69,29 @@ class BaseModelA(ForecastModelTemplate):
 
 class A1(BaseModelA):
 
-    def __init__(self, forecast_timeframe: float):
-        super().__init__(forecast_timeframe)
-        self.model = self.__class__.__name__
+    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
+
         self.lineSeriesName = "highly sustainable"
-        self.lineSeriesValueY += str(self.__class__.__name__)
 
         self.average_daily_water_consumption = 500.0
+
         self.daily_rainfall_probability = 0.2
         self.average_water_collection_per_rainfall = 10000.0
+
         self.daily_water_import_probability = 0.15
         self.average_water_collection_per_import = 1000.0
+
         self.daily_contamination_probability = 0.1
         self.average_percent_water_lost_during_contamination = 0.05
 
 
 class A2(BaseModelA):
 
-    def __init__(self, forecast_timeframe: float):
-        super().__init__(forecast_timeframe)
-        self.model = self.__class__.__name__
+    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
+
         self.lineSeriesName = "sustainable"
-        self.lineSeriesValueY += str(self.__class__.__name__)
 
         self.average_daily_water_consumption = 500.0
         self.daily_rainfall_probability = 0.1
@@ -99,11 +104,10 @@ class A2(BaseModelA):
 
 class A3(BaseModelA):
 
-    def __init__(self, forecast_timeframe: float):
-        super().__init__(forecast_timeframe)
-        self.model = self.__class__.__name__
+    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
+
         self.lineSeriesName = "non-sustainable"
-        self.lineSeriesValueY += str(self.__class__.__name__)
 
         self.average_daily_water_consumption = 500.0
         self.daily_rainfall_probability = 0.05

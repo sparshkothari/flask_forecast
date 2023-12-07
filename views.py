@@ -19,11 +19,16 @@ def forecast_profile():
 
 @views_bp.route('/simulate_forecast', methods=['POST'])
 def simulate_forecast():
-    forecast_base_model = str(request.form["forecastBaseModel"])
-    forecast_timeframe = float(request.form["forecastTimeframe"])
+    base_model = str(request.form["baseModel"])
+    timeframe_multiplier = float(request.form["timeframeMultiplier"])
+    timeframe_unit = int(request.form["timeframeUnit"])
+    timeframe_increment_multiplier = float(request.form["timeframeIncrementMultiplier"])
+
     forecast_container_obj = ForecastModelContainer(
-        forecast_base_model=forecast_base_model,
-        forecast_timeframe=forecast_timeframe)
+        base_model=base_model,
+        timeframe_multiplier=timeframe_multiplier,
+        timeframe_unit=timeframe_unit,
+        timeframe_increment_multiplier=timeframe_increment_multiplier)
     o = json.dumps(forecast_container_obj.run())
 
     ForecastObj.drop_collection()
