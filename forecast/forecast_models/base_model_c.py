@@ -12,7 +12,7 @@ class GenerateBaseModelCArray(GenerateBaseModelArray):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
         self.array.append(C1(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
         self.array.append(C2(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
-        # self.array.append(C3(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
+        self.array.append(C3(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
 
 
 class BaseModelCChartVariables(BaseModelChartVariables):
@@ -38,23 +38,30 @@ class BaseModelC(ForecastModelTemplate):
 
         self.cosine = False
         self.sine = False
+        self.custom = False
 
     def iterate(self, index):
+        super().iterate(index)
         if self.cosine and self.sine:
-            self.tan_f(index)
+            self.data_point = self.tan_f(index)
         elif self.cosine:
-            self.cosine_f(index)
+            self.data_point = self.cosine_f(index)
         elif self.sine:
-            self.sine_f(index)
+            self.data_point = self.sine_f(index)
+        elif self.custom:
+            self.data_point = self.custom_f(index)
 
-    def tan_f(self, index):
-        self.data_point = self.amplitude * math.tan((self.frequency * index) + self.phase)
+    def tan_f(self, x):
+        return self.amplitude * math.tan((self.frequency * x) + self.phase)
 
-    def cosine_f(self, index):
-        self.data_point = self.amplitude * math.cos((self.frequency * index) + self.phase)
+    def cosine_f(self, x):
+        return self.amplitude * math.cos((self.frequency * x) + self.phase)
 
-    def sine_f(self, index):
-        self.data_point = self.amplitude * math.sin((self.frequency * index) + self.phase)
+    def sine_f(self, x):
+        return self.amplitude * math.sin((self.frequency * x) + self.phase)
+
+    def custom_f(self, x):
+        pass
 
 
 class C1(BaseModelC):
@@ -63,9 +70,7 @@ class C1(BaseModelC):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
 
         self.lineSeriesName = "example—model-cosine " + self.__class__.__name__
-
         self.cosine = True
-        self.sine = False
 
 
 class C2(BaseModelC):
@@ -74,8 +79,6 @@ class C2(BaseModelC):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
 
         self.lineSeriesName = "example—model-sine " + self.__class__.__name__
-
-        self.cosine = False
         self.sine = True
 
 
@@ -84,7 +87,10 @@ class C3(BaseModelC):
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
 
-        self.lineSeriesName = "example—model-tan " + self.__class__.__name__
+        self.lineSeriesName = "example—model-custom " + self.__class__.__name__
+        self.custom = True
 
-        self.cosine = True
-        self.sine = True
+    def custom_f(self, index):
+        super().custom_f(index)
+        y = super().sine_f(index)
+        return y * self.cosine_f(index)

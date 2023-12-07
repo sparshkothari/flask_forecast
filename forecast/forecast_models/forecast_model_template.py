@@ -30,7 +30,7 @@ class ForecastModelTemplate:
         self.timeframe_increment = -1
         if timeframe_unit == 0:
             self.timeframe = int(timeframe_multiplier * 365)
-            self.timeframe_increment = int(timeframe_increment_multiplier * 365)
+            self.timeframe_increment = timeframe_increment_multiplier * 365
             self.lineSeriesValueX += "day"
 
         if timeframe_increment_multiplier == 0.0:
