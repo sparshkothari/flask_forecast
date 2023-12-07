@@ -1,5 +1,6 @@
 # base_model_a.py
 import math
+import forecast_utils
 from random import Random
 
 from forecast.forecast_models.forecast_model_template import ForecastModelTemplate, GenerateBaseModelArray, \
@@ -13,6 +14,7 @@ class GenerateBaseModelCArray(GenerateBaseModelArray):
         self.array.append(C1(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
         self.array.append(C2(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
         self.array.append(C3(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
+        self.array.append(C4(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
 
 
 class BaseModelCChartVariables(BaseModelChartVariables):
@@ -43,24 +45,15 @@ class BaseModelC(ForecastModelTemplate):
     def iterate(self, index):
         super().iterate(index)
         if self.cosine and self.sine:
-            self.data_point = self.tan_f(index)
+            self.data_point = forecast_utils.tan_f(self.amplitude, self.frequency, self.phase, index)
         elif self.cosine:
-            self.data_point = self.cosine_f(index)
+            self.data_point = forecast_utils.cosine_f(self.amplitude, self.frequency, self.phase, index)
         elif self.sine:
-            self.data_point = self.sine_f(index)
+            self.data_point = forecast_utils.sine_f(self.amplitude, self.frequency, self.phase, index)
         elif self.custom:
-            self.data_point = self.custom_f(index)
+            self.data_point = self.custom_f(self.amplitude, self.frequency, self.phase, index)
 
-    def tan_f(self, x):
-        return self.amplitude * math.tan((self.frequency * x) + self.phase)
-
-    def cosine_f(self, x):
-        return self.amplitude * math.cos((self.frequency * x) + self.phase)
-
-    def sine_f(self, x):
-        return self.amplitude * math.sin((self.frequency * x) + self.phase)
-
-    def custom_f(self, x):
+    def custom_f(self, a, f, p, x):
         pass
 
 
@@ -89,8 +82,18 @@ class C3(BaseModelC):
 
         self.lineSeriesName = "example—model-custom " + self.__class__.__name__
         self.custom = True
+        self.multiplier = 0.5
 
-    def custom_f(self, index):
-        super().custom_f(index)
-        y = super().sine_f(index)
-        return y * self.cosine_f(index)
+    def custom_f(self, a, f, p, x):
+        super().custom_f(a, f, p, x)
+        y = forecast_utils.sine_f(a, f, p, x)
+        m = self.multiplier
+        y = y * forecast_utils.cosine_f(m * a, m * f, m * p, m * x)
+        return y
+
+
+class C4(C3):
+
+    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
+        self.multiplier = 2
