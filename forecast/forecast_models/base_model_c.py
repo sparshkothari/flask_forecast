@@ -15,6 +15,7 @@ class GenerateBaseModelCArray(GenerateBaseModelArray):
         self.array.append(C2(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
         self.array.append(C3(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
         self.array.append(C4(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
+        self.array.append(C5(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
 
 
 class BaseModelCChartVariables(BaseModelChartVariables):
@@ -97,3 +98,10 @@ class C4(C3):
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
         self.multiplier = 2
+
+
+class C5(C3):
+
+    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
+        self.multiplier = 5
