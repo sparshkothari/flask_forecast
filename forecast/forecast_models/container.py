@@ -1,8 +1,8 @@
-# forecast_model_container.py
-from forecast.forecast_models.base_model_c import BaseModelCChartVariables, GenerateBaseModelCArray
+# container.py
+from forecast.forecast_models.c import CChartVariables, GenerateCArray
 
 
-class ForecastModelContainer:
+class Container:
 
     def __init__(self,
                  base_model: str,
@@ -11,10 +11,10 @@ class ForecastModelContainer:
         self.simulated_models = []
         self.chartVariables = {}
         if base_model == "C":
-            self.chartVariables = BaseModelCChartVariables(timeframe_multiplier,
+            self.chartVariables = CChartVariables(timeframe_multiplier,
                                                            timeframe_unit,
                                                            timeframe_increment_multiplier).__dict__
-            self.models = GenerateBaseModelCArray(timeframe_multiplier,
+            self.models = GenerateCArray(timeframe_multiplier,
                                                   timeframe_unit,
                                                   timeframe_increment_multiplier).array
 

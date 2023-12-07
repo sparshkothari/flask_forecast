@@ -1,5 +1,5 @@
 from mongoengine import Document, StringField
 
 
-class ForecastObj(Document):
+class DataObj(Document):
     data_string = StringField(required=True)
