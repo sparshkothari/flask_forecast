@@ -10,8 +10,10 @@ var ForecastProfile = {
         document.getElementById("simulateForecast").addEventListener("click", function () {
             $.post("/simulate_forecast",
                 {
-                    forecastBaseModel: document.getElementById("forecastBaseModel").value,
-                    forecastTimeframe: document.getElementById("forecastTimeframe").value
+                    baseModel: document.getElementById("baseModel").value,
+                    timeframeMultiplier: document.getElementById("timeframeMultiplier").value,
+                    timeframeUnit: 0,
+                    timeframeIncrementMultiplier: document.getElementById("timeframeIncrementMultiplier").value
                 }
             )
                 .done(function (data, status) {
@@ -52,7 +54,7 @@ var ForecastProfile = {
         let forecastChartVariables = forecastData[0]
         let forecastObjDictArray = forecastData[1]
         let chartTitle = forecastChartVariables["title"]
-        let chartDisplayType = parseInt(document.getElementById("forecastDisplayType").value);
+        let chartDisplayType = parseInt(document.getElementById("displayType").value);
         let chartDivElementIds = ForecastProfile.createChartDivElements(forecastObjDictArray.length)
 
         let splicedData = ForecastProfile.spliceForecastArrayData(forecastChartVariables, forecastObjDictArray)
@@ -150,11 +152,11 @@ var ForecastProfile = {
     },
     spliceForecastArrayData: function (chartVariables, objDictArray) {
         let data = []
-        let axisDataPoints = parseInt(chartVariables["axis_data_points"])
+        let length = objDictArray[0]["data"].length
         let lineSeriesValueX = chartVariables["lineSeriesValueX"]
-        for (let i = 0; i < axisDataPoints; i++) {
+        for (let i = 0; i < length; i++) {
             let dataItem = {}
-            dataItem[lineSeriesValueX] = i;
+            dataItem[lineSeriesValueX] = objDictArray[0]["data"][i][lineSeriesValueX];
             for (let j of objDictArray) {
                 let lineSeriesValueY = j["lineSeriesValueY"]
                 dataItem[lineSeriesValueY] = j["data"][i][lineSeriesValueY]
@@ -165,11 +167,11 @@ var ForecastProfile = {
     },
     colorKey: {
         key: [
-            /*{name: "Yellow", hexValue: "#FCE883"},*/
+            {name: "Yellow", hexValue: "#FCE883"},
             {name: "Lime", hexValue: "#00FF00"},
-            {name: "Purple", hexValue: "#800080"},
-            {name: "Magenta", hexValue: "#F664AF"},
-            {name: "Green", hexValue: "#1CAC78"},
+            /*{name: "Purple", hexValue: "#800080"},*/
+            /*{name: "Magenta", hexValue: "#F664AF"},*/
+            /*{name: "Green", hexValue: "#1CAC78"},*/
             {name: "Red", hexValue: "#EE204D"},
             {name: "Cyan", hexValue: "#00D7AF"},
             {name: "DarkOrchid", hexValue: "#9932CC"},

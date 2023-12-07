@@ -1,22 +1,43 @@
 # forecast_model_container.py
 from forecast.forecast_models.base_model_a import GenerateBaseModelAArray, BaseModelAChartVariables
+from forecast.forecast_models.base_model_b import BaseModelBChartVariables, GenerateBaseModelBArray
+from forecast.forecast_models.base_model_c import BaseModelCChartVariables, GenerateBaseModelCArray
 
 
 class ForecastModelContainer:
 
     def __init__(self,
-                 forecast_base_model: str,
-                 forecast_timeframe: float):
-        self.forecast_models = []
+                 base_model: str,
+                 timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+        self.models = []
         self.simulated_models = []
         self.chartVariables = {}
-        if forecast_base_model == "A":
-            self.chartVariables = BaseModelAChartVariables(forecast_timeframe).__dict__
-            self.forecast_models = GenerateBaseModelAArray(forecast_timeframe).array
+        if base_model == "A":
+            self.chartVariables = BaseModelAChartVariables(timeframe_multiplier,
+                                                           timeframe_unit,
+                                                           timeframe_increment_multiplier).__dict__
+            self.models = GenerateBaseModelAArray(timeframe_multiplier,
+                                                  timeframe_unit,
+                                                  timeframe_increment_multiplier).array
+        elif base_model == "B":
+            self.chartVariables = BaseModelBChartVariables(timeframe_multiplier,
+                                                           timeframe_unit,
+                                                           timeframe_increment_multiplier).__dict__
+            self.models = GenerateBaseModelBArray(timeframe_multiplier,
+                                                  timeframe_unit,
+                                                  timeframe_increment_multiplier).array
+
+        elif base_model == "C":
+            self.chartVariables = BaseModelCChartVariables(timeframe_multiplier,
+                                                           timeframe_unit,
+                                                           timeframe_increment_multiplier).__dict__
+            self.models = GenerateBaseModelCArray(timeframe_multiplier,
+                                                  timeframe_unit,
+                                                  timeframe_increment_multiplier).array
 
     def run(self):
         o = []
-        for model in self.forecast_models:
+        for model in self.models:
             model.simulate_model()
             self.simulated_models.append(model.__dict__)
         o.append(self.chartVariables)
