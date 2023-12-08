@@ -32,11 +32,11 @@ var Profile = {
             window.location.href = "/data"
         }, false);
     },
-    staticVariables: function (forecastData) {
-        let forecastObjDictArray = forecastData[1]
+    staticVariables: function (data) {
+        let objDictArray = data[1]
         let staticVariables = document.getElementById("staticVariables");
         staticVariables.innerHTML = ""
-        for (let e of forecastObjDictArray) {
+        for (let e of objDictArray) {
             let a = document.createElement("a")
             a.setAttribute("class", "w3-bar-item")
             let aHTML = "";
@@ -49,25 +49,25 @@ var Profile = {
             staticVariables.appendChild(a)
         }
     },
-    chart: function (forecastData) {
+    chart: function (data) {
         am4core.useTheme(am4themes_animated);
-        let forecastChartVariables = forecastData[0]
-        let forecastObjDictArray = forecastData[1]
-        let chartTitle = forecastChartVariables["title"]
+        let chartVariables = data[0]
+        let objDictArray = data[1]
+        let chartTitle = chartVariables["title"]
         let chartDisplayType = parseInt(document.getElementById("displayType").value);
-        let chartDivElementIds = Profile.createChartDivElements(forecastObjDictArray.length)
+        let chartDivElementIds = Profile.createChartDivElements(objDictArray.length)
 
-        let splicedData = Profile.spliceForecastArrayData(forecastChartVariables, forecastObjDictArray)
-        let xAxisTitleText = forecastChartVariables["xAxisTitleText"]
-        let yAxisTitleText = forecastChartVariables["yAxisTitleText"]
+        let splicedData = Profile.spliceData(chartVariables, objDictArray)
+        let xAxisTitleText = chartVariables["xAxisTitleText"]
+        let yAxisTitleText = chartVariables["yAxisTitleText"]
         let chartParent = Profile.createXYValueAxisChart(chartDivElementIds[0], chartTitle, splicedData, xAxisTitleText, yAxisTitleText)
 
-        for (let [index, j] of forecastObjDictArray.entries()) {
-            let lineSeriesValueX = forecastChartVariables["lineSeriesValueX"];
+        for (let [index, j] of objDictArray.entries()) {
+            let lineSeriesValueX = chartVariables["lineSeriesValueX"];
             let lineSeriesValueY = j["lineSeriesValueY"]
             let lineSeriesName = j["lineSeriesName"]
             Profile.createChartLineSeries(chartParent, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType)
-            if (forecastObjDictArray.length > 1) {
+            if (objDictArray.length > 1) {
                 let jData = j["data"]
                 let jLineSeriesValueX = lineSeriesValueX
                 let jLineSeriesValueY = lineSeriesValueY
@@ -150,7 +150,7 @@ var Profile = {
         }
         return o;
     },
-    spliceForecastArrayData: function (chartVariables, objDictArray) {
+    spliceData: function (chartVariables, objDictArray) {
         let data = []
         let length = objDictArray[0]["data"].length
         let lineSeriesValueX = chartVariables["lineSeriesValueX"]
