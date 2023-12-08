@@ -11,9 +11,9 @@ let Profile = {
             $.post("/simulate",
                 {
                     baseModel: document.getElementById("baseModel").value,
-                    timeframeMultiplier: document.getElementById("timeframeMultiplier").value,
-                    timeframeUnit: 0,
-                    timeframeIncrementMultiplier: document.getElementById("timeframeIncrementMultiplier").value
+                    indexStart: document.getElementById("indexStart").value,
+                    indexStop: document.getElementById("indexStop").value,
+                    increment: document.getElementById("increment").value
                 }
             )
                 .done(function (data, status) {
@@ -99,6 +99,7 @@ let Profile = {
             var lineSeries = chart.series.push(new am4charts.LineSeries());
             lineSeries.dataFields.valueX = lineSeriesValueX;
             lineSeries.dataFields.valueY = lineSeriesValueY;
+            lineSeries.name = lineSeriesName;
             if (chartDisplayType === 0) {
                 lineSeries.fillOpacity = 0.3;
                 lineSeries.fill = am4core.color(Profile.colorKey.nextHexColor())
@@ -114,7 +115,6 @@ let Profile = {
                 lineSeries.stroke = am4core.color(nextHextColor)
                 lineSeries.strokeWidth = 1;
             }
-            lineSeries.name = lineSeriesName;
         },
         createChartDivElements: function (length) {
             let o = [];

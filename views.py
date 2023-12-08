@@ -20,13 +20,13 @@ def profile():
 @views_bp.route('/simulate', methods=['POST'])
 def simulate():
     base_model = str(request.form["baseModel"])
-    timeframe_multiplier = float(request.form["timeframeMultiplier"])
-    timeframe_increment_multiplier = float(request.form["timeframeIncrementMultiplier"])
-    timeframe_unit = int(request.form["timeframeUnit"])
+    index_start = int(request.form["indexStart"])
+    index_stop = int(request.form["indexStop"])
+    increment = int(request.form["increment"])
     q = ModelRequestObj(base_model=base_model,
-                        timeframe_multiplier=timeframe_multiplier,
-                        timeframe_increment_multiplier=timeframe_increment_multiplier,
-                        timeframe_unit=timeframe_unit)
+                        index_start=index_start,
+                        index_stop=index_stop,
+                        increment=increment)
 
     container_obj = Container(q)
     o = json.dumps(container_obj.run())
