@@ -39,7 +39,6 @@ class D1(D):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.index_start = -1 * self.timeframe
         self.a = 1.0
         self.p = 3.0
 
@@ -48,7 +47,6 @@ class D2(D):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.index_start = -1 * self.timeframe
         self.a = 1.0
         self.h = 100.0
         self.p = 3.0
