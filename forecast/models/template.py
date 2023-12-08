@@ -1,6 +1,5 @@
 # template.py
-import math
-
+import numpy as np
 from models import ModelRequestObj
 
 
@@ -37,7 +36,7 @@ class Template:
         self.data = []
 
     def simulate_model(self):
-        for i in range(self.index_start, self.index_stop + 1, self.increment):
+        for i in np.arange(self.index_start, self.index_stop + 1, self.increment):
             self.iterate(i)
             data_item = {self.lineSeriesValueX: i, self.lineSeriesValueY: self.data_point}
             self.data.append(data_item)
