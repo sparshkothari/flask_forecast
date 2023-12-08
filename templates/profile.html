@@ -3,11 +3,12 @@
     <body>
     <div id="main">
         <div class="w3-container w3-center" style="color:black; font-family: serif">
-            <input type="button" id="simulateForecast" value="Simulate Forecast">
-            <input type="button" id="viewRawForecastData" value="View Raw Forecast Data">
+            <input type="button" id="simulate" value="simulate">
+            <input type="button" id="viewRawData" value="raw data">
             <label for="baseModel">Choose a base model:</label>
             <select name="baseModel" id="baseModel">
-                <option value="C" selected="selected">C</option>
+                <option value="C">C</option>
+                <option value="D" selected="selected">D</option>
             </select>
             <label for="timeframeMultiplier">Choose a timeframe:</label>
             <select name="timeframeMultiplier" id="timeframeMultiplier">
@@ -37,10 +38,10 @@
                 <option value="2">Fill</option>
             </select>
         </div>
-        <div id="forecastDisplay" class="w3-center">
-            <div id="forecastObjArrayStaticVariables" style="font-family: serif" class="w3-bar w3-center"></div>
-            <div id="forecastChartDivDisplay">
-                <div id="forecastChartDivRows"></div>
+        <div id="display" class="w3-center">
+            <div id="staticVariables" style="font-family: serif" class="w3-bar w3-center"></div>
+            <div id="chartDivDisplay">
+                <div id="chartDivRows"></div>
             </div>
         </div>
     </div>
@@ -48,5 +49,5 @@
     <script src="https://www.amcharts.com/lib/4/core.js"></script>
     <script src="https://www.amcharts.com/lib/4/charts.js"></script>
     <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
-    <script src="/static/js/forecastProfile.js"></script>
+    <script src="/static/js/profile.js"></script>
 {% endblock %}
