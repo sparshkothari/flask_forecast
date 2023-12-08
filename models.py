@@ -1,11 +1,11 @@
-from mongoengine import Document, StringField, IntField
+from mongoengine import Document, StringField, FloatField
 
 
 class ModelRequestObj(Document):
     base_model = StringField(required=True)
-    index_start = IntField(required=True)
-    index_stop = IntField(required=True)
-    increment = IntField(required=True)
+    index_start = FloatField(required=True)
+    index_stop = FloatField(required=True)
+    increment = FloatField(required=True)
 
 
 class DataObj(Document):

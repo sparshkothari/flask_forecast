@@ -1,50 +1,48 @@
-# d.py
+# e.py
 import utils
 from forecast.models.template import Template, GenerateArray, \
     ChartVariables
 from models import ModelRequestObj
 
 
-class DArray(GenerateArray):
+class EArray(GenerateArray):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__()
-        self.array.append(D1(q))
-        self.array.append(D2(q))
+        self.array.append(E1(q))
+        self.array.append(E2(q))
 
 
-class DChartVariables(ChartVariables):
+class EChartVariables(ChartVariables):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.title += "D"
+        self.title += "E"
         self.yAxisTitleText = "{placeholder}"
 
 
-class D(Template):
-    pass
-
-
-class D1(D):
+class E(Template):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.a = 1.0
-        self.h = 0.0
-        self.k = 0.0
-        self.p = 3.0
+        self.m = 0.0
+        self.b = 0.0
 
     def iterate(self, index):
         super().iterate(index)
-        self.data_point = utils.exp_f(self.a, self.h, self.k, self.p, index)
+        self.data_point = utils.line_f(self.m, self.b, index)
 
 
-class D2(D):
+class E1(E):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.c = [1, 2, 3, 4]
+        self.m = 3.0
 
-    def iterate(self, index):
-        super().iterate(index)
-        self.data_point = utils.exp2_f(self.c, index)
+
+class E2(E):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.m = -3.0
+

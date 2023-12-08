@@ -26,7 +26,7 @@ class C(Template):
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         self.amplitude = 5.0
-        self.frequency = (2 * math.pi) / 365
+        self.frequency = (2 * math.pi) / 1000
         self.phase = 0.0
 
 
@@ -34,7 +34,7 @@ class C1(C):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.multiplier = 2.0
+        self.frequency_multiplier = 2.0
         self.multiplier_iterations = 4
 
     def iterate(self, index):
@@ -42,14 +42,10 @@ class C1(C):
         self.data_point = self.method(self.amplitude, self.frequency, self.phase, index)
 
     def method(self, a, f, p, x):
-        m = self.multiplier
-        m_i = self.multiplier_iterations
         y = utils.sine_f(a, f, p, x)
         sine = False
-        for i in range(0, m_i):
-            a = m * a
-            f = m * f
-            p = m * p
+        for i in range(0, self.multiplier_iterations):
+            f = self.frequency_multiplier * f
             if sine:
                 y = y * utils.sine_f(a, f, p, x)
                 sine = False
