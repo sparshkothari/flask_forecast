@@ -1,30 +1,21 @@
 # container.py
 from forecast.models.c import CChartVariables, CArray
 from forecast.models.d import DChartVariables, DArray
+from models import ModelRequestObj
 
 
 class Container:
 
-    def __init__(self,
-                 base_model: str,
-                 timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+    def __init__(self, q: ModelRequestObj):
         self.models = []
         self.simulated_models = []
         self.chartVariables = {}
-        if base_model == "C":
-            self.chartVariables = CChartVariables(timeframe_multiplier,
-                                                  timeframe_unit,
-                                                  timeframe_increment_multiplier).__dict__
-            self.models = CArray(timeframe_multiplier,
-                                 timeframe_unit,
-                                 timeframe_increment_multiplier).array
-        elif base_model == "D":
-            self.chartVariables = DChartVariables(timeframe_multiplier,
-                                                  timeframe_unit,
-                                                  timeframe_increment_multiplier).__dict__
-            self.models = DArray(timeframe_multiplier,
-                                 timeframe_unit,
-                                 timeframe_increment_multiplier).array
+        if q.base_model == "C":
+            self.chartVariables = CChartVariables(q).__dict__
+            self.models = CArray(q).array
+        elif q.base_model == "D":
+            self.chartVariables = DChartVariables(q).__dict__
+            self.models = DArray(q).array
 
     def run(self):
         o = []

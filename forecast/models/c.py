@@ -3,27 +3,28 @@ import math
 import utils
 from forecast.models.template import Template, GenerateArray, \
     ChartVariables
+from models import ModelRequestObj
 
 
 class CArray(GenerateArray):
 
-    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
-        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
-        self.array.append(C1(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier))
+    def __init__(self, q: ModelRequestObj):
+        super().__init__()
+        self.array.append(C1(q))
 
 
 class CChartVariables(ChartVariables):
 
-    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
-        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
         self.title += "C"
         self.yAxisTitleText = "{placeholder}"
 
 
 class C(Template):
 
-    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
-        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
         self.amplitude = 5.0
         self.frequency = (2 * math.pi) / 365
         self.phase = 0.0
@@ -31,8 +32,8 @@ class C(Template):
 
 class C1(C):
 
-    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
-        super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
         self.multiplier = 2.0
         self.multiplier_iterations = 4
 

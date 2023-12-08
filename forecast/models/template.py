@@ -1,38 +1,41 @@
 # template.py
 import math
 
+from models import ModelRequestObj
+
 
 class GenerateArray:
 
-    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+    def __init__(self):
         self.array = []
         pass
 
 
 class ChartVariables:
 
-    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
-        self.title = "Model: "
-        self.lineSeriesValueX = Template(-1, timeframe_unit, -1).lineSeriesValueX
+    def __init__(self, q: ModelRequestObj):
+        self.title = ""
+        self.lineSeriesValueX = Template(q).lineSeriesValueX
         self.xAxisTitleText = self.lineSeriesValueX
         self.yAxisTitleText = ""
 
 
 class Template:
 
-    def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
+    def __init__(self, q: ModelRequestObj):
         self.model = self.__class__.__name__
+        self.title = self.model
         self.lineSeriesValueX = "value_x_"
         self.lineSeriesValueY = "value_y_" + self.model
         self.lineSeriesName = self.lineSeriesValueY
         self.timeframe = -1
         self.timeframe_increment = -1
-        if timeframe_unit == 0:
-            self.timeframe = int(timeframe_multiplier * 365)
-            self.timeframe_increment = timeframe_increment_multiplier * 365
+        if q.timeframe_unit == 0:
+            self.timeframe = int(q.timeframe_multiplier * 365)
+            self.timeframe_increment = q.timeframe_increment_multiplier * 365
             self.lineSeriesValueX += "day"
 
-        if timeframe_increment_multiplier == 0.0:
+        if q.timeframe_increment_multiplier == 0.0:
             self.timeframe_increment = 1.0
 
         self.index_start = 0

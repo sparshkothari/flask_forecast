@@ -6,7 +6,7 @@ let Profile = {
         this.setupSimulate()
         this.setupRawDataFetch()
     },
-    setupSimulate: function() {
+    setupSimulate: function () {
         document.getElementById("simulate").addEventListener("click", function () {
             $.post("/simulate",
                 {
@@ -27,7 +27,7 @@ let Profile = {
                 });
         }, false);
     },
-    setupRawDataFetch: function() {
+    setupRawDataFetch: function () {
         document.getElementById("viewRawData").addEventListener("click", function () {
             window.location.href = "/data"
         }, false);
@@ -55,115 +55,120 @@ let Profile = {
         let objDictArray = data[1]
         let chartTitle = chartVariables["title"]
         let chartDisplayType = parseInt(document.getElementById("displayType").value);
-        let chartDivElementIds = Profile.createChartDivElements(objDictArray.length)
+        let chartDivElementIds = Profile.chartUtils.createChartDivElements(objDictArray.length)
 
-        let splicedData = Profile.spliceData(chartVariables, objDictArray)
+        let splicedData = Profile.dataUtils.spliceData(chartVariables, objDictArray)
         let xAxisTitleText = chartVariables["xAxisTitleText"]
         let yAxisTitleText = chartVariables["yAxisTitleText"]
-        let chartParent = Profile.createXYValueAxisChart(chartDivElementIds[0], chartTitle, splicedData, xAxisTitleText, yAxisTitleText)
+        let chartParent = Profile.chartUtils.createXYValueAxisChart(chartDivElementIds[0], chartTitle, splicedData, xAxisTitleText, yAxisTitleText)
 
         for (let [index, j] of objDictArray.entries()) {
             let lineSeriesValueX = chartVariables["lineSeriesValueX"];
             let lineSeriesValueY = j["lineSeriesValueY"]
             let lineSeriesName = j["lineSeriesName"]
-            Profile.createChartLineSeries(chartParent, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType)
+            Profile.chartUtils.createChartLineSeries(chartParent, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType)
             if (objDictArray.length > 1) {
                 let jData = j["data"]
+                let jTitle = j["title"]
                 let jLineSeriesValueX = lineSeriesValueX
                 let jLineSeriesValueY = lineSeriesValueY
                 let jLineSeriesName = lineSeriesName
-                let chartJ = Profile.createXYValueAxisChart(chartDivElementIds[index + 1], chartTitle, jData, xAxisTitleText, yAxisTitleText)
-                Profile.createChartLineSeries(chartJ, jLineSeriesValueX, jLineSeriesValueY, jLineSeriesName, chartDisplayType)
+                let chartJ = Profile.chartUtils.createXYValueAxisChart(chartDivElementIds[index + 1], jTitle, jData, xAxisTitleText, yAxisTitleText)
+                Profile.chartUtils.createChartLineSeries(chartJ, jLineSeriesValueX, jLineSeriesValueY, jLineSeriesName, chartDisplayType)
             }
         }
     },
-    createXYValueAxisChart: function (divName, chartTitle, data, xAxisTitleText, yAxisTitleText) {
-        let chart = am4core.create(divName, am4charts.XYChart);
-        chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+    chartUtils: {
+        createXYValueAxisChart: function (divName, chartTitle, data, xAxisTitleText, yAxisTitleText) {
+            let chart = am4core.create(divName, am4charts.XYChart);
+            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
 
-        let xAxis = chart.xAxes.push(new am4charts.ValueAxis());
-        let yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            let xAxis = chart.xAxes.push(new am4charts.ValueAxis());
+            let yAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-        xAxis.title.text = xAxisTitleText;
-        yAxis.title.text = yAxisTitleText;
+            xAxis.title.text = xAxisTitleText;
+            yAxis.title.text = yAxisTitleText;
 
-        let o = chart.titles.create()
-        o.text = chartTitle
-        chart.data = data
-        chart.legend = new am4charts.Legend();
-        return chart;
-    },
-    createChartLineSeries: function (chart, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType) {
-        var lineSeries = chart.series.push(new am4charts.LineSeries());
-        lineSeries.dataFields.valueX = lineSeriesValueX;
-        lineSeries.dataFields.valueY = lineSeriesValueY;
-        if (chartDisplayType === 0) {
-            lineSeries.fillOpacity = 0.3;
-            lineSeries.fill = am4core.color(Profile.colorKey.nextHexColor())
-            lineSeries.stroke = am4core.color(Profile.colorKey.nextHexColor())
-            lineSeries.strokeWidth = 1;
-        } else if (chartDisplayType === 1) {
-            lineSeries.stroke = am4core.color(Profile.colorKey.nextHexColor())
-            lineSeries.strokeWidth = 1;
-        } else if (chartDisplayType === 2) {
-            let nextHextColor = Profile.colorKey.nextHexColor()
-            lineSeries.fillOpacity = 0.3;
-            lineSeries.fill = am4core.color(nextHextColor)
-            lineSeries.stroke = am4core.color(nextHextColor)
-            lineSeries.strokeWidth = 1;
-        }
-        lineSeries.name = lineSeriesName;
-    },
-    createChartDivElements: function (length) {
-        let o = [];
-        let columnCount = 2;
-        let cellCount = length;
+            let o = chart.titles.create()
+            o.text = chartTitle
+            chart.data = data
+            chart.legend = new am4charts.Legend();
+            return chart;
+        },
+        createChartLineSeries: function (chart, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType) {
+            var lineSeries = chart.series.push(new am4charts.LineSeries());
+            lineSeries.dataFields.valueX = lineSeriesValueX;
+            lineSeries.dataFields.valueY = lineSeriesValueY;
+            if (chartDisplayType === 0) {
+                lineSeries.fillOpacity = 0.3;
+                lineSeries.fill = am4core.color(Profile.colorKey.nextHexColor())
+                lineSeries.stroke = am4core.color(Profile.colorKey.nextHexColor())
+                lineSeries.strokeWidth = 1;
+            } else if (chartDisplayType === 1) {
+                lineSeries.stroke = am4core.color(Profile.colorKey.nextHexColor())
+                lineSeries.strokeWidth = 1;
+            } else if (chartDisplayType === 2) {
+                let nextHextColor = Profile.colorKey.nextHexColor()
+                lineSeries.fillOpacity = 0.3;
+                lineSeries.fill = am4core.color(nextHextColor)
+                lineSeries.stroke = am4core.color(nextHextColor)
+                lineSeries.strokeWidth = 1;
+            }
+            lineSeries.name = lineSeriesName;
+        },
+        createChartDivElements: function (length) {
+            let o = [];
+            let columnCount = 2;
+            let cellCount = length;
 
-        let divElements = document.getElementById("chartDivRows");
-        divElements.innerHTML = "";
+            let divElements = document.getElementById("chartDivRows");
+            divElements.innerHTML = "";
 
-        let parentChartDiv = document.createElement("div")
-        parentChartDiv.id = "parentChartDiv"
-        parentChartDiv.style.height = "600px"
-        parentChartDiv.style.width = "100%"
-        divElements.appendChild(parentChartDiv)
-        o.push(parentChartDiv.id)
-        if (cellCount > 1) {
-            for (let i = 0; i < cellCount; i = i + columnCount) {
+            let parentChartDiv = document.createElement("div")
+            parentChartDiv.id = "parentChartDiv"
+            parentChartDiv.style.height = "600px"
+            parentChartDiv.style.width = "100%"
+            divElements.appendChild(parentChartDiv)
+            o.push(parentChartDiv.id)
+            if (cellCount > 1) {
+                for (let i = 0; i < cellCount; i = i + columnCount) {
 
-                if (i % columnCount === 0) {
-                    let y = document.createElement("div");
-                    y.id = "chartDivRow" + i;
-                    y.classList = "w3-row";
-                    divElements.appendChild(y);
+                    if (i % columnCount === 0) {
+                        let y = document.createElement("div");
+                        y.id = "chartDivRow" + i;
+                        y.classList = "w3-row";
+                        divElements.appendChild(y);
 
-                    for (let j = 0; j < columnCount; j++) {
-                        let u = document.createElement("div");
-                        u.classList = "w3-col s" + 12 / columnCount + " w3-center";
-                        u.id = "chartDivCol" + (i + j);
-                        u.style.height = "600px"
-                        y.appendChild(u);
-                        o.push(u.id);
+                        for (let j = 0; j < columnCount; j++) {
+                            let u = document.createElement("div");
+                            u.classList = "w3-col s" + 12 / columnCount + " w3-center";
+                            u.id = "chartDivCol" + (i + j);
+                            u.style.height = "600px"
+                            y.appendChild(u);
+                            o.push(u.id);
+                        }
                     }
                 }
             }
+            return o;
         }
-        return o;
     },
-    spliceData: function (chartVariables, objDictArray) {
-        let data = []
-        let length = objDictArray[0]["data"].length
-        let lineSeriesValueX = chartVariables["lineSeriesValueX"]
-        for (let i = 0; i < length; i++) {
-            let dataItem = {}
-            dataItem[lineSeriesValueX] = objDictArray[0]["data"][i][lineSeriesValueX];
-            for (let j of objDictArray) {
-                let lineSeriesValueY = j["lineSeriesValueY"]
-                dataItem[lineSeriesValueY] = j["data"][i][lineSeriesValueY]
+    dataUtils: {
+        spliceData: function (chartVariables, objDictArray) {
+            let data = []
+            let length = objDictArray[0]["data"].length
+            let lineSeriesValueX = chartVariables["lineSeriesValueX"]
+            for (let i = 0; i < length; i++) {
+                let dataItem = {}
+                dataItem[lineSeriesValueX] = objDictArray[0]["data"][i][lineSeriesValueX];
+                for (let j of objDictArray) {
+                    let lineSeriesValueY = j["lineSeriesValueY"]
+                    dataItem[lineSeriesValueY] = j["data"][i][lineSeriesValueY]
+                }
+                data.push(dataItem)
             }
-            data.push(dataItem)
+            return data;
         }
-        return data;
     },
     colorKey: {
         key: [

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request
 from werkzeug.wrappers.response import Response
 import json
-from models import DataObj
+from models import ModelRequestObj, DataObj
 from forecast.models.container import Container
 
 views_bp = Blueprint('views_bp', __name__)
@@ -21,14 +21,14 @@ def profile():
 def simulate():
     base_model = str(request.form["baseModel"])
     timeframe_multiplier = float(request.form["timeframeMultiplier"])
-    timeframe_unit = int(request.form["timeframeUnit"])
     timeframe_increment_multiplier = float(request.form["timeframeIncrementMultiplier"])
+    timeframe_unit = int(request.form["timeframeUnit"])
+    q = ModelRequestObj(base_model=base_model,
+                        timeframe_multiplier=timeframe_multiplier,
+                        timeframe_increment_multiplier=timeframe_increment_multiplier,
+                        timeframe_unit=timeframe_unit)
 
-    container_obj = Container(
-        base_model=base_model,
-        timeframe_multiplier=timeframe_multiplier,
-        timeframe_unit=timeframe_unit,
-        timeframe_increment_multiplier=timeframe_increment_multiplier)
+    container_obj = Container(q)
     o = json.dumps(container_obj.run())
 
     DataObj.drop_collection()
