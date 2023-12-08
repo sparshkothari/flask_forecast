@@ -1,5 +1,5 @@
 # container.py
-from forecast.forecast_models.c import CChartVariables, GenerateCArray
+from forecast.models.c import CChartVariables, GenerateCArray
 
 
 class Container:

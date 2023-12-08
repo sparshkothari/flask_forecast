@@ -1,7 +1,7 @@
 # base_model_a.py
 import math
 import utils
-from forecast.forecast_models.template import Template, GenerateArray, \
+from forecast.models.template import Template, GenerateArray, \
     ChartVariables
 
 

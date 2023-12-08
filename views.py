@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from werkzeug.wrappers.response import Response
 import json
 from models import DataObj
-from forecast.forecast_models.container import Container
+from forecast.models.container import Container
 
 views_bp = Blueprint('views_bp', __name__)
 
