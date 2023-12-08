@@ -29,6 +29,7 @@ class D(Template):
         self.p = 0.0
 
     def iterate(self, index):
+        super().iterate(index)
         self.data_point = utils.exp_f(self.a, self.h, self.k, self.p, index)
 
 

@@ -24,7 +24,7 @@ class Template:
         self.model = self.__class__.__name__
         self.lineSeriesValueX = "value_x_"
         self.lineSeriesValueY = "value_y_" + self.model
-        self.lineSeriesName = ""
+        self.lineSeriesName = self.lineSeriesValueY
         self.timeframe = -1
         self.timeframe_increment = -1
         if timeframe_unit == 0:

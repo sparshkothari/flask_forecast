@@ -1,4 +1,4 @@
-var Profile = {
+let Profile = {
     init: function () {
         this.profile();
     },
@@ -6,7 +6,7 @@ var Profile = {
         this.setupSimulate()
         this.setupRawDataFetch()
     },
-    setupSimulate() {
+    setupSimulate: function() {
         document.getElementById("simulate").addEventListener("click", function () {
             $.post("/simulate",
                 {
@@ -27,7 +27,7 @@ var Profile = {
                 });
         }, false);
     },
-    setupRawDataFetch() {
+    setupRawDataFetch: function() {
         document.getElementById("viewRawData").addEventListener("click", function () {
             window.location.href = "/data"
         }, false);
