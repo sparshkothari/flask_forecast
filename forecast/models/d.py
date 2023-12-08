@@ -48,5 +48,5 @@ class D2(D):
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         self.a = 1.0
-        self.h = 100.0
+        self.k = 1000
         self.p = 3.0

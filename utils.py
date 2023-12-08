@@ -24,4 +24,4 @@ Exponential Functions
 
 
 def exp_f(a, h, k, p, x):
-    return a * math.pow(x-h, p) + k
+    return (a * math.pow(x-h, p)) + k
