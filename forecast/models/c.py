@@ -1,11 +1,11 @@
-# base_model_a.py
+# c.py
 import math
 import utils
 from forecast.models.template import Template, GenerateArray, \
     ChartVariables
 
 
-class GenerateCArray(GenerateArray):
+class CArray(GenerateArray):
 
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
@@ -24,11 +24,6 @@ class C(Template):
 
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
-        self.base_model = "C"
-
-        self.initial_data_point = math.pow(10, 5)
-        self.data_point = self.initial_data_point
-
         self.amplitude = 5.0
         self.frequency = (2 * math.pi) / 365
         self.phase = 0.0
@@ -38,7 +33,6 @@ class C1(C):
 
     def __init__(self, timeframe_multiplier: float, timeframe_unit: int, timeframe_increment_multiplier: float):
         super().__init__(timeframe_multiplier, timeframe_unit, timeframe_increment_multiplier)
-
         self.multiplier = 2.0
         self.multiplier_iterations = 4
 
