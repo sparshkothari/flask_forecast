@@ -1,5 +1,6 @@
 # container.py
-from forecast.models.c import CChartVariables, GenerateCArray
+from forecast.models.c import CChartVariables, CArray
+from forecast.models.d import DChartVariables, DArray
 
 
 class Container:
@@ -12,11 +13,18 @@ class Container:
         self.chartVariables = {}
         if base_model == "C":
             self.chartVariables = CChartVariables(timeframe_multiplier,
-                                                           timeframe_unit,
-                                                           timeframe_increment_multiplier).__dict__
-            self.models = GenerateCArray(timeframe_multiplier,
                                                   timeframe_unit,
-                                                  timeframe_increment_multiplier).array
+                                                  timeframe_increment_multiplier).__dict__
+            self.models = CArray(timeframe_multiplier,
+                                 timeframe_unit,
+                                 timeframe_increment_multiplier).array
+        elif base_model == "D":
+            self.chartVariables = DChartVariables(timeframe_multiplier,
+                                                  timeframe_unit,
+                                                  timeframe_increment_multiplier).__dict__
+            self.models = DArray(timeframe_multiplier,
+                                 timeframe_unit,
+                                 timeframe_increment_multiplier).array
 
     def run(self):
         o = []
