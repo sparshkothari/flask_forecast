@@ -1,5 +1,4 @@
 # water.py
-import utils
 from utils import UtilsJSONEncoder, CosineF, SineF, LineT
 from forecast.models.template import Template, GenerateArray, \
     ChartVariables
@@ -39,7 +38,10 @@ class Contaminate(SineF):
 
 class Recycle:
 
-    def __init__(self, c: float):
+    def __init__(self, c: float = 0.0):
+        self.c = c
+
+    def populate(self, c: float):
         self.c = c
 
     def method(self, x):
@@ -50,11 +52,11 @@ class Water(Template):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.consume = Consume(0.0, -.0)
-        self.rain = Rain(1.0, 1.0, 1.0, 1.0)
-        self.import_w = ImportW(1.0, 1.0, 1.0, 1.0)
-        self.contaminate = Contaminate(1.0, 1.0, 1.0, -1.0)
-        self.recycle = Recycle(0.2)
+        self.consume = Consume()
+        self.rain = Rain()
+        self.import_w = ImportW()
+        self.contaminate = Contaminate()
+        self.recycle = Recycle()
 
         t = UtilsJSONEncoder()
         t.encode(self.consume)
@@ -74,4 +76,11 @@ class Water(Template):
 
 
 class Water1(Water):
-    pass
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.consume.populate(0.0, -.0)
+        self.rain.populate(1.0, 1.0, 1.0, 1.0)
+        self.import_w.populate(1.0, 1.0, 1.0, 1.0)
+        self.contaminate.populate(1.0, 1.0, 1.0, -1.0)
+        self.recycle.populate(0.2)
