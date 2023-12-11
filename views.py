@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request
 from werkzeug.wrappers.response import Response
 import json
+from utils import UtilsJSONEncoder
 from models import ModelRequestObj, DataObj
 from forecast.models.container import Container
 
@@ -19,7 +20,7 @@ def profile():
 
 @views_bp.route('/simulate', methods=['POST'])
 def simulate():
-    base_model = str(request.form["baseModel"])
+    base_model = int(request.form["baseModel"])
     index_start = float(request.form["indexStart"])
     index_stop = float(request.form["indexStop"])
     increment = float(request.form["increment"])
@@ -29,7 +30,7 @@ def simulate():
                         increment=increment)
 
     container_obj = Container(q)
-    o = json.dumps(container_obj.run())
+    o = json.dumps(container_obj.run(), cls=UtilsJSONEncoder)
 
     DataObj.drop_collection()
     database_obj = DataObj(data_string=o)
