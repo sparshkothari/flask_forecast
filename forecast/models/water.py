@@ -1,4 +1,5 @@
 # water.py
+import utils
 from utils import UtilsJSONEncoder, CosineF, SineF, LineT
 from forecast.models.template import Template, GenerateArray, \
     ChartVariables
@@ -10,7 +11,6 @@ class WaterArray(GenerateArray):
     def __init__(self, q: ModelRequestObj):
         super().__init__()
         self.array.append(Water1(q))
-        self.array.append(Water2(q))
 
 
 class WaterChartVariables(ChartVariables):
@@ -46,7 +46,7 @@ class Recycle:
         self.c = c
 
     def method(self, x):
-        return self.c * x
+        return abs(self.c * x)
 
 
 class Water(Template):
@@ -80,19 +80,38 @@ class Water1(Water):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.consume.populate(0.0, -1.0)
-        self.rain.populate(1.0, 1.0, 1.0, 1.0)
-        self.import_w.populate(1.0, 1.0, 1.0, 1.0)
-        self.contaminate.populate(1.0, 1.0, 1.0, -1.0)
-        self.recycle.populate(0.2)
+        self.rain = self.RainWater1()
+        self.import_w = self.ImportWWater1()
+        self.contaminate = self.ContaminateWater1()
 
+        t = UtilsJSONEncoder()
+        t.encode(self.rain)
+        t.encode(self.import_w)
+        t.encode(self.contaminate)
 
-class Water2(Water):
+        self.consume.populate(0.0, -5.0)
+        self.rain.populate(3.0, 1.0, 1.0, 3.0)
+        self.import_w.populate(3.0, 1.0, 1.0, 3.0)
+        self.contaminate.populate(3.0, 1.0, 1.0, -3.0)
+        self.recycle.populate(0.4)
 
-    def __init__(self, q: ModelRequestObj):
-        super().__init__(q)
-        self.consume.populate(0.0, -0.5)
-        self.rain.populate(2.0, 1.0, 1.0, 2.0)
-        self.import_w.populate(1.5, 1.0, 1.0, 1.5)
-        self.contaminate.populate(1.5, 1.0, 1.0, -1.5)
-        self.recycle.populate(0.3)
+    class RainWater1(Rain):
+
+        def method(self, x):
+            y = super().method(x)
+            y = y * abs(utils.sine_f(self.a, 10.0 * self.f, self.p, x) + self.k)
+            return y
+
+    class ImportWWater1(ImportW):
+
+        def method(self, x):
+            y = super().method(x)
+            y = y * abs(utils.cosine_f(self.a, 10.0 * self.f, self.p, x) + self.k)
+            return y
+
+    class ContaminateWater1(Contaminate):
+
+        def method(self, x):
+            y = super().method(x)
+            y = y * abs(utils.cosine_f(self.a, 15.0 * self.f, self.p, x) + self.k)
+            return y
