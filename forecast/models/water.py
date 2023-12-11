@@ -10,6 +10,7 @@ class WaterArray(GenerateArray):
     def __init__(self, q: ModelRequestObj):
         super().__init__()
         self.array.append(Water1(q))
+        self.array.append(Water2(q))
 
 
 class WaterChartVariables(ChartVariables):
@@ -79,8 +80,19 @@ class Water1(Water):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.consume.populate(0.0, -.0)
+        self.consume.populate(0.0, -1.0)
         self.rain.populate(1.0, 1.0, 1.0, 1.0)
         self.import_w.populate(1.0, 1.0, 1.0, 1.0)
         self.contaminate.populate(1.0, 1.0, 1.0, -1.0)
         self.recycle.populate(0.2)
+
+
+class Water2(Water):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.consume.populate(0.0, -0.5)
+        self.rain.populate(2.0, 1.0, 1.0, 2.0)
+        self.import_w.populate(1.5, 1.0, 1.0, 1.5)
+        self.contaminate.populate(1.5, 1.0, 1.0, -1.5)
+        self.recycle.populate(0.3)
