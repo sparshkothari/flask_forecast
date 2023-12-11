@@ -42,6 +42,9 @@ let Profile = {
             let aHTML = "";
             for (let [key, value] of Object.entries(e)) {
                 if (key !== "data") {
+                    if (typeof(value) === "object"){
+                        value = JSON.stringify(value)
+                    }
                     aHTML += "<br>" + key + ": " + value
                 }
             }
