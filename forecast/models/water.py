@@ -1,5 +1,4 @@
 # water.py
-import utils
 from utils import UtilsJSONEncoder, CosineF, SineF, LineT
 from forecast.models.template import Template, GenerateArray, \
     ChartVariables
