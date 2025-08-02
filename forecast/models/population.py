@@ -16,6 +16,7 @@ class PopulationArray(GenerateArray):
         q.increment = 0.01
         self.array.append(Population1(q))
         self.array.append(Population2(q))
+        self.array.append(Population3(q))
 
 
 class PopulationChartVariables(ChartVariables):
@@ -51,7 +52,7 @@ class Population1(Population):
         t = UtilsJSONEncoder()
         t.encode(self.growth)
 
-        self.growth.populate(100.0, 1.0, 0.2)
+        self.growth.populate(100.0, 1.0, 0.1)
 
 
 class Population2(Population):
@@ -63,7 +64,19 @@ class Population2(Population):
         t = UtilsJSONEncoder()
         t.encode(self.growth)
 
-        self.growth.populate(100.0, 1.0, 0.7)
+        self.growth.populate(100.0, 1.0, 0.5)
+
+
+class Population3(Population):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.growth = LogisticGrowth()
+
+        t = UtilsJSONEncoder()
+        t.encode(self.growth)
+
+        self.growth.populate(100.0, 1.0, 1.1)
 
 
 class Growth:
