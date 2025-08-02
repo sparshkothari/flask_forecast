@@ -18,16 +18,16 @@ Trigonometric Functions
 '''
 
 
-def tan_f(a, f, p, x):
-    return a * math.tan((f * x) + p)
+def tan_f(a, f, p, k, x):
+    return a * math.tan(f * (x - p)) + k
 
 
-def cosine_f(a, f, p, x):
-    return a * math.cos((f * x) + p)
+def cosine_f(a, f, p, k, x):
+    return a * math.cos(f * (x - p)) + k
 
 
-def sine_f(a, f, p, x):
-    return a * math.sin((f * x) + p)
+def sine_f(a, f, p, k, x):
+    return a * math.sin(f * (x - p)) + k
 
 
 class TrigT:
@@ -60,21 +60,21 @@ class TanF(TrigT):
 
     def method(self, x):
         super().method(x)
-        return tan_f(self.a, self.f, self.p, x) + self.k
+        return tan_f(self.a, self.f, self.p, self.k, x)
 
 
 class CosineF(TrigT):
 
     def method(self, x):
         super().method(x)
-        return cosine_f(self.a, self.f, self.p, x) + self.k
+        return cosine_f(self.a, self.f, self.p, self.k, x)
 
 
 class SineF(TrigT):
 
     def method(self, x):
         super().method(x)
-        return sine_f(self.a, self.f, self.p, x) + self.k
+        return sine_f(self.a, self.f, self.p, self.k, x)
 
 
 '''
