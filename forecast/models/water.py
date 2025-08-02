@@ -99,19 +99,19 @@ class Water1(Water):
 
         def method(self, x):
             y = super().method(x)
-            y = y * abs(utils.sine_f(self.a, 10.0 * self.f, self.p, x) + self.k)
+            y = y * abs(utils.sine_f(self.a, 10.0 * self.f, self.p, self.k, x))
             return y
 
     class ImportWWater1(ImportW):
 
         def method(self, x):
             y = super().method(x)
-            y = y * abs(utils.cosine_f(self.a, 10.0 * self.f, self.p, x) + self.k)
+            y = y * abs(utils.cosine_f(self.a, 10.0 * self.f, self.p, self.k, x))
             return y
 
     class ContaminateWater1(Contaminate):
 
         def method(self, x):
             y = super().method(x)
-            y = y * abs(utils.cosine_f(self.a, 15.0 * self.f, self.p, x) + self.k)
+            y = y * abs(utils.cosine_f(self.a, 10.0 * self.f, self.p, self.k, x))
             return y
