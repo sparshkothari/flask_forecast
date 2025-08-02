@@ -21,13 +21,10 @@ def profile():
 @views_bp.route('/simulate', methods=['POST'])
 def simulate():
     base_model = int(request.form["baseModel"])
-    index_start = float(request.form["indexStart"])
-    index_stop = float(request.form["indexStop"])
-    increment = float(request.form["increment"])
     q = ModelRequestObj(base_model=base_model,
-                        index_start=index_start,
-                        index_stop=index_stop,
-                        increment=increment)
+                        index_start=0.0,
+                        index_stop=0.0,
+                        increment=0.0)
 
     container_obj = Container(q)
     o = json.dumps(container_obj.run(), cls=UtilsJSONEncoder)

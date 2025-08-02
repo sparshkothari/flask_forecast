@@ -12,10 +12,10 @@ class Container:
         self.chartVariables = {}
         if q.base_model == 0:
             self.models = WaterArray(q).array
-            self.chartVariables = WaterChartVariables(q).__dict__
+            self.chartVariables = WaterChartVariables().__dict__
         elif q.base_model == 1:
             self.models = PopulationArray(q).array
-            self.chartVariables = PopulationChartVariables(q).__dict__
+            self.chartVariables = PopulationChartVariables().__dict__
 
     def run(self):
         o = []

@@ -1,7 +1,7 @@
 # population.py
 import math
 
-from utils import UtilsJSONEncoder, CosineF, SineF, LineT
+from utils import UtilsJSONEncoder
 from forecast.models.template import Template, GenerateArray, \
     ChartVariables
 from models import ModelRequestObj
@@ -10,15 +10,18 @@ from models import ModelRequestObj
 class PopulationArray(GenerateArray):
 
     def __init__(self, q: ModelRequestObj):
-        super().__init__()
+        super().__init__(q)
+        q.index_start = 0.0
+        q.index_stop = 50.0
+        q.increment = 0.01
         self.array.append(Population1(q))
         self.array.append(Population2(q))
 
 
 class PopulationChartVariables(ChartVariables):
 
-    def __init__(self, q: ModelRequestObj):
-        super().__init__(q)
+    def __init__(self):
+        super().__init__()
         self.title += "Population"
         self.xAxisTitleText = "Time"
         self.yAxisTitleText = "{placeholder}"
