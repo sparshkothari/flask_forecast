@@ -11,6 +11,8 @@ class WaterArray(GenerateArray):
     def __init__(self, q: ModelRequestObj):
         super().__init__()
         self.array.append(Water1(q))
+        self.array.append(Water2(q))
+        self.array.append(Water3(q))
 
 
 class WaterChartVariables(ChartVariables):
@@ -18,6 +20,7 @@ class WaterChartVariables(ChartVariables):
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         self.title += "Water"
+        self.xAxisTitleText = "Time"
         self.yAxisTitleText = "{placeholder}"
 
 
@@ -80,9 +83,23 @@ class Water1(Water):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.rain = self.RainWater1()
-        self.import_w = self.ImportWWater1()
-        self.contaminate = self.ContaminateWater1()
+
+        t = UtilsJSONEncoder()
+        t.encode(self.rain)
+        t.encode(self.import_w)
+        t.encode(self.contaminate)
+
+        self.consume.populate(0.0, -2.0)
+        self.rain.populate(3.0, 2.0, 1.0, 3.0)
+        self.import_w.populate(3.0, 2.0, 1.0, 3.0)
+        self.contaminate.populate(3.0, 2.0, 1.0, -3.0)
+        self.recycle.populate(0.4)
+
+
+class Water2(Water):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
 
         t = UtilsJSONEncoder()
         t.encode(self.rain)
@@ -90,28 +107,24 @@ class Water1(Water):
         t.encode(self.contaminate)
 
         self.consume.populate(0.0, -5.0)
-        self.rain.populate(3.0, 1.0, 1.0, 3.0)
-        self.import_w.populate(3.0, 1.0, 1.0, 3.0)
-        self.contaminate.populate(3.0, 1.0, 1.0, -3.0)
+        self.rain.populate(3.0, 2.0, 1.0, 3.0)
+        self.import_w.populate(3.0, 2.0, 1.0, 3.0)
+        self.contaminate.populate(3.0, 2.0, 1.0, -3.0)
         self.recycle.populate(0.4)
 
-    class RainWater1(Rain):
 
-        def method(self, x):
-            y = super().method(x)
-            y = y * abs(utils.sine_f(self.a, 10.0 * self.f, self.p, self.k, x))
-            return y
+class Water3(Water):
 
-    class ImportWWater1(ImportW):
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
 
-        def method(self, x):
-            y = super().method(x)
-            y = y * abs(utils.cosine_f(self.a, 10.0 * self.f, self.p, self.k, x))
-            return y
+        t = UtilsJSONEncoder()
+        t.encode(self.rain)
+        t.encode(self.import_w)
+        t.encode(self.contaminate)
 
-    class ContaminateWater1(Contaminate):
-
-        def method(self, x):
-            y = super().method(x)
-            y = y * abs(utils.cosine_f(self.a, 10.0 * self.f, self.p, self.k, x))
-            return y
+        self.consume.populate(0.0, -8.0)
+        self.rain.populate(3.0, 2.0, 1.0, 3.0)
+        self.import_w.populate(3.0, 2.0, 1.0, 3.0)
+        self.contaminate.populate(3.0, 2.0, 1.0, -3.0)
+        self.recycle.populate(0.4)

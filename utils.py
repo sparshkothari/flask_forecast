@@ -33,24 +33,24 @@ def sine_f(a, f, p, k, x):
 class TrigT:
 
     def __init__(self,
-                 a: float = 0.0,
-                 f: float = 0.0,
-                 p: float = 0.0,
-                 k: float = 0.0):
-        self.a = a
-        self.f = f
-        self.p = p
-        self.k = k
+                 amplitude: float = 0.0,
+                 frequency: float = 0.0,
+                 phase_shift: float = 0.0,
+                 k_vertical_shift: float = 0.0):
+        self.amplitude = amplitude
+        self.frequency = frequency
+        self.phase_shift = phase_shift
+        self.k_vertical_shift = k_vertical_shift
 
     def populate(self,
-                 a: float,
-                 f: float,
-                 p: float,
-                 k: float):
-        self.a = a
-        self.f = f
-        self.p = p
-        self.k = k
+                 amplitude: float,
+                 frequency: float,
+                 phase_shift: float,
+                 k_vertical_shift: float):
+        self.amplitude = amplitude
+        self.frequency = frequency
+        self.phase_shift = phase_shift
+        self.k_vertical_shift = k_vertical_shift
 
     def method(self, x):
         pass
@@ -60,21 +60,21 @@ class TanF(TrigT):
 
     def method(self, x):
         super().method(x)
-        return tan_f(self.a, self.f, self.p, self.k, x)
+        return tan_f(self.amplitude, self.frequency, self.phase_shift, self.k_vertical_shift, x)
 
 
 class CosineF(TrigT):
 
     def method(self, x):
         super().method(x)
-        return cosine_f(self.a, self.f, self.p, self.k, x)
+        return cosine_f(self.amplitude, self.frequency, self.phase_shift, self.k_vertical_shift, x)
 
 
 class SineF(TrigT):
 
     def method(self, x):
         super().method(x)
-        return sine_f(self.a, self.f, self.p, self.k, x)
+        return sine_f(self.amplitude, self.frequency, self.phase_shift, self.k_vertical_shift, x)
 
 
 '''
