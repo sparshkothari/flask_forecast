@@ -16,8 +16,8 @@ class TaylorArray(GenerateArray):
         q.increment = 0.01
 
         if q.base_model == 5:
-            q.index_start = -10.0
-            q.index_stop = 10.0
+            q.index_start = -10.1
+            q.index_stop = 10.1
             self.array.append(SineRegular(q))
             self.array.append(MaclaurinSine1(q))
             self.array.append(MaclaurinSine2(q))
