@@ -119,3 +119,25 @@ class LineT:
 
     def method(self, x):
         return line_f(self.m, self.b, x)
+
+
+'''
+Units (Label)
+'''
+
+
+class UnitsLabel:
+    time_seconds = "t (seconds)"
+    time_minutes = "t (minutes)"
+    time_hours = "t (hours)"
+    time_days = "t (days)"
+    time_weeks = "t (weeks)"
+    time_months = "t (months)"
+    time_years = "t (years)"
+
+    people_thousands = "people (thousands)"
+
+    milliliters = "milliliters (mL)"
+    liters = "liters (L)"
+
+    units = "units"
