@@ -15,6 +15,8 @@ class FourierArray(GenerateArray):
         q.index_stop = 50.0
         q.increment = 0.01
         self.array.append(Fourier1(q))
+        self.array.append(Fourier2(q))
+        self.array.append(Fourier3(q))
 
 
 class FourierChartVariables(ChartVariables):
@@ -50,7 +52,31 @@ class Fourier1(Fourier):
         t = UtilsJSONEncoder()
         t.encode(self.wave)
 
-        self.wave.populate(50)
+        self.wave.populate(3)
+
+
+class Fourier2(Fourier):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.wave = SquareWave()
+
+        t = UtilsJSONEncoder()
+        t.encode(self.wave)
+
+        self.wave.populate(5)
+
+
+class Fourier3(Fourier):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.wave = SquareWave()
+
+        t = UtilsJSONEncoder()
+        t.encode(self.wave)
+
+        self.wave.populate(20)
 
 
 class Wave:
@@ -85,7 +111,6 @@ class SquareWave(Wave):
     def method_impl(self, i: float = 0.0, time: float = 0.0):
         super().method_impl(i, time)
         t = time
-        h = (2*i) - 1
-        h1 = 2/(h * math.pi)
-        return h1*math.sin(h*t)
-
+        h = (2 * i) - 1
+        h1 = 2 / (h * math.pi)
+        return h1 * math.sin(h * t)
