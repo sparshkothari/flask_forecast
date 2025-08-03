@@ -119,9 +119,12 @@ class MaclaurinSineImplementation(TaylorImplementation):
 
     def method(self, x: float = 0.0):
         v = super().method(x)
-        a = math.sin(x)
-        if abs(v - a) > 3.0:
-            return a
+        v_limit = 1.01
+        if abs(v) > v_limit:
+            if v >= 0.0:
+                return v_limit
+            else:
+                return -1.0 * v_limit
         else:
             return v
 
