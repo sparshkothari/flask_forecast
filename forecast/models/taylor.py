@@ -20,6 +20,7 @@ class TaylorArray(GenerateArray):
             self.array.append(SineRegular(q))
             self.array.append(MaclaurinSine1(q))
             self.array.append(MaclaurinSine2(q))
+            self.array.append(MaclaurinSine3(q))
 
 
 class TaylorChartVariables(ChartVariables):
@@ -65,10 +66,22 @@ class MaclaurinSine1(Taylor):
         t = UtilsJSONEncoder()
         t.encode(self.taylor_implementation)
 
-        self.taylor_implementation.populate(11)
+        self.taylor_implementation.populate(2)
 
 
 class MaclaurinSine2(Taylor):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.taylor_implementation = MaclaurinSineImplementation()
+
+        t = UtilsJSONEncoder()
+        t.encode(self.taylor_implementation)
+
+        self.taylor_implementation.populate(7)
+
+
+class MaclaurinSine3(Taylor):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
@@ -102,6 +115,14 @@ class MaclaurinSineImplementation(TaylorImplementation):
 
     def __init__(self):
         super().__init__()
+
+    def method(self, x: float = 0.0):
+        v = super().method(x)
+        a = math.sin(x)
+        if abs(v - a) > 3.0:
+            return a
+        else:
+            return v
 
     def method_impl(self, i: float = 0.0, x: float = 0.0):
         super().method_impl(i, x)
