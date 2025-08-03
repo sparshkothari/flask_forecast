@@ -2,6 +2,7 @@
 from forecast.models.water import WaterArray, WaterChartVariables
 from forecast.models.population import PopulationArray, PopulationChartVariables
 from forecast.models.fourier import FourierArray, FourierChartVariables
+from forecast.models.fourier_transform import FourierTransformArray, FourierTransformChartVariables
 from forecast.models.taylor import TaylorArray, TaylorChartVariables
 from models import ModelRequestObj
 
@@ -21,7 +22,10 @@ class Container:
         elif q.base_model == 2 or q.base_model == 3 or q.base_model == 4:
             self.models = FourierArray(q).array
             self.chartVariables = FourierChartVariables().__dict__
-        elif q.base_model == 5:
+        elif q.base_model == 5 or q.base_model == 6 or q.base_model == 7:
+            self.models = FourierTransformArray(q).array
+            self.chartVariables = FourierTransformChartVariables().__dict__
+        elif q.base_model == 8:
             self.models = TaylorArray(q).array
             self.chartVariables = TaylorChartVariables().__dict__
 

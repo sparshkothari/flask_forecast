@@ -30,6 +30,11 @@ def sine_f(a, f, p, k, x):
     return a * math.sin(f * (x - p)) + k
 
 
+def sinc_f(x: float = 0.0):
+    o = math.pi * x
+    return math.sin(o) / o
+
+
 class TrigT:
 
     def __init__(self,
@@ -144,3 +149,5 @@ class UnitsLabel:
     liters = "liters (L)"
 
     units = "units"
+
+    frequency_hertz = "frequency (hertz)"
