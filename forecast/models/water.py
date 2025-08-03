@@ -1,5 +1,5 @@
 # water.py
-from utils import UtilsJSONEncoder, CosineF, SineF, LineT
+from utils import UtilsJSONEncoder, CosineF, SineF, LineT, UnitsLabel
 from forecast.models.template import Template, GenerateArray, \
     ChartVariables
 from models import ModelRequestObj
@@ -22,8 +22,8 @@ class WaterChartVariables(ChartVariables):
     def __init__(self):
         super().__init__()
         self.title += "Water"
-        self.xAxisTitleText = "Time"
-        self.yAxisTitleText = "{placeholder}"
+        self.xAxisTitleText = UnitsLabel.time_months
+        self.yAxisTitleText = UnitsLabel.liters
 
 
 class Consume(LineT):

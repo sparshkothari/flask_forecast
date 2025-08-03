@@ -4,9 +4,7 @@ from models import ModelRequestObj
 
 
 class TemplateDefaultValues:
-
-    def __init__(self):
-        self.lineSeriesValueX = "x"
+    lineSeriesValueX = "x"
 
 
 class GenerateArray:
@@ -20,7 +18,7 @@ class ChartVariables:
 
     def __init__(self):
         self.title = ""
-        self.lineSeriesValueX = TemplateDefaultValues().lineSeriesValueX
+        self.lineSeriesValueX = TemplateDefaultValues.lineSeriesValueX
         self.xAxisTitleText = self.lineSeriesValueX
         self.yAxisTitleText = ""
 
@@ -30,7 +28,7 @@ class Template:
     def __init__(self, q: ModelRequestObj):
         self.model = self.__class__.__name__
         self.title = self.model
-        self.lineSeriesValueX = TemplateDefaultValues().lineSeriesValueX
+        self.lineSeriesValueX = TemplateDefaultValues.lineSeriesValueX
         self.lineSeriesValueY = "y_" + self.model
         self.lineSeriesName = self.lineSeriesValueY
 

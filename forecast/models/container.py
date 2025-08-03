@@ -1,6 +1,7 @@
 # container.py
 from forecast.models.water import WaterArray, WaterChartVariables
 from forecast.models.population import PopulationArray, PopulationChartVariables
+from forecast.models.fourier import FourierArray, FourierChartVariables
 from models import ModelRequestObj
 
 
@@ -16,6 +17,9 @@ class Container:
         elif q.base_model == 1:
             self.models = PopulationArray(q).array
             self.chartVariables = PopulationChartVariables().__dict__
+        elif q.base_model == 2 or q.base_model == 3 or q.base_model == 4:
+            self.models = FourierArray(q).array
+            self.chartVariables = FourierChartVariables().__dict__
 
     def run(self):
         o = []

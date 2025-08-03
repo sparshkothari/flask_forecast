@@ -1,7 +1,7 @@
 # population.py
 import math
 
-from utils import UtilsJSONEncoder
+from utils import UtilsJSONEncoder, UnitsLabel
 from forecast.models.template import Template, GenerateArray, \
     ChartVariables
 from models import ModelRequestObj
@@ -24,8 +24,8 @@ class PopulationChartVariables(ChartVariables):
     def __init__(self):
         super().__init__()
         self.title += "Population"
-        self.xAxisTitleText = "Time"
-        self.yAxisTitleText = "{placeholder}"
+        self.xAxisTitleText = UnitsLabel.time_months
+        self.yAxisTitleText = UnitsLabel.people_thousands
 
 
 class Population(Template):
