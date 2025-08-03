@@ -15,7 +15,7 @@ class TaylorArray(GenerateArray):
         q.index_stop = 50.0
         q.increment = 0.01
 
-        if q.base_model == 5:
+        if q.base_model == 8:
             q.index_start = -10.1
             q.index_stop = 10.1
             self.array.append(SineRegular(q))
@@ -132,6 +132,6 @@ class MaclaurinSineImplementation(TaylorImplementation):
         super().method_impl(i, x)
         o = math.pow(-1.0, i)
         h = (2.0 * i) + 1.0
-        g = o/math.factorial(h)
+        g = o/math.factorial(int(h))
         return g * math.pow(x, h)
 
