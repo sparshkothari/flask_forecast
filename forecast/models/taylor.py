@@ -16,6 +16,7 @@ class TaylorArray(GenerateArray):
         q.increment = 0.01
 
         if q.base_model == 5:
+            q.index_start = -10.0
             q.index_stop = 10.0
             self.array.append(SineRegular(q))
             self.array.append(MaclaurinSine1(q))
@@ -90,7 +91,7 @@ class MaclaurinSine3(Taylor):
         t = UtilsJSONEncoder()
         t.encode(self.taylor_implementation)
 
-        self.taylor_implementation.populate(13)
+        self.taylor_implementation.populate(10)
 
 
 class TaylorImplementation:
