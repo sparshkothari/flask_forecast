@@ -127,6 +127,9 @@ Units (Label)
 
 
 class UnitsLabel:
+    time_nano_seconds = "t (nanoseconds)"
+    time_micro_seconds = "t (microseconds)"
+    time_milli_seconds = "t (milliseconds)"
     time_seconds = "t (seconds)"
     time_minutes = "t (minutes)"
     time_hours = "t (hours)"

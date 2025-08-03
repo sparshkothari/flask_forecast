@@ -36,7 +36,7 @@ class FourierChartVariables(ChartVariables):
     def __init__(self):
         super().__init__()
         self.title += "Fourier Series"
-        self.xAxisTitleText = UnitsLabel.time_months
+        self.xAxisTitleText = UnitsLabel.time_nano_seconds
         self.yAxisTitleText = UnitsLabel.units
 
 
