@@ -14,9 +14,21 @@ class FourierArray(GenerateArray):
         q.index_start = 0.0
         q.index_stop = 50.0
         q.increment = 0.01
-        self.array.append(Fourier1(q))
-        self.array.append(Fourier2(q))
-        self.array.append(Fourier3(q))
+
+        if q.base_model == 2:
+            q.index_stop = 10.0
+            self.array.append(FourierSquareWave3(q))
+            self.array.append(FourierTriangleWave3(q))
+        elif q.base_model == 3:
+            q.index_stop = 10.0
+            self.array.append(FourierSquareWave1(q))
+            self.array.append(FourierSquareWave2(q))
+            self.array.append(FourierSquareWave3(q))
+        elif q.base_model == 4:
+            q.index_stop = 5.0
+            self.array.append(FourierTriangleWave1(q))
+            self.array.append(FourierTriangleWave2(q))
+            self.array.append(FourierTriangleWave3(q))
 
 
 class FourierChartVariables(ChartVariables):
@@ -43,7 +55,7 @@ class Fourier(Template):
         self.data_point = self.wave.method(x)
 
 
-class Fourier1(Fourier):
+class FourierSquareWave1(Fourier):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
@@ -55,7 +67,7 @@ class Fourier1(Fourier):
         self.wave.populate(3)
 
 
-class Fourier2(Fourier):
+class FourierSquareWave2(Fourier):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
@@ -67,7 +79,7 @@ class Fourier2(Fourier):
         self.wave.populate(5)
 
 
-class Fourier3(Fourier):
+class FourierSquareWave3(Fourier):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
@@ -77,6 +89,42 @@ class Fourier3(Fourier):
         t.encode(self.wave)
 
         self.wave.populate(20)
+
+
+class FourierTriangleWave1(Fourier):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.wave = TriangleWave()
+
+        t = UtilsJSONEncoder()
+        t.encode(self.wave)
+
+        self.wave.populate(2)
+
+
+class FourierTriangleWave2(Fourier):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.wave = TriangleWave()
+
+        t = UtilsJSONEncoder()
+        t.encode(self.wave)
+
+        self.wave.populate(3)
+
+
+class FourierTriangleWave3(Fourier):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.wave = TriangleWave()
+
+        t = UtilsJSONEncoder()
+        t.encode(self.wave)
+
+        self.wave.populate(10)
 
 
 class Wave:
@@ -105,12 +153,23 @@ class SquareWave(Wave):
         super().__init__(n_sum_limit)
         self.a_initial = 0.5
 
-    def populate(self, n_sum_limit: int = 0):
-        super().populate(n_sum_limit)
+    def method_impl(self, i: float = 0.0, time: float = 0.0):
+        super().method_impl(i, time)
+        t = time
+        h = (2.0 * i) - 1.0
+        h1 = 2.0 / (h * math.pi)
+        return h1 * math.sin(h * t)
+
+
+class TriangleWave(Wave):
+
+    def __init__(self, n_sum_limit: int = 0):
+        super().__init__(n_sum_limit)
+        self.a_initial = 0.5
 
     def method_impl(self, i: float = 0.0, time: float = 0.0):
         super().method_impl(i, time)
         t = time
-        h = (2 * i) - 1
-        h1 = 2 / (h * math.pi)
-        return h1 * math.sin(h * t)
+        h = (2.0 * i) - 1.0
+        h1 = 4.0 / math.pow(h * math.pi, 2)
+        return h1 * math.cos(h * math.pi * t) * -1.0
