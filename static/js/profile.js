@@ -10,10 +10,7 @@ let Profile = {
         document.getElementById("simulate").addEventListener("click", function () {
             $.post("/simulate",
                 {
-                    baseModel: document.getElementById("baseModel").value,
-                    indexStart: document.getElementById("indexStart").value,
-                    indexStop: document.getElementById("indexStop").value,
-                    increment: document.getElementById("increment").value
+                    baseModel: document.getElementById("baseModel").value
                 }
             )
                 .done(function (data, status) {

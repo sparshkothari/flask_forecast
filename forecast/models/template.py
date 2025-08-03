@@ -3,18 +3,24 @@ import numpy as np
 from models import ModelRequestObj
 
 
-class GenerateArray:
+class TemplateDefaultValues:
 
     def __init__(self):
+        self.lineSeriesValueX = "x"
+
+
+class GenerateArray:
+
+    def __init__(self, q: ModelRequestObj):
         self.array = []
         pass
 
 
 class ChartVariables:
 
-    def __init__(self, q: ModelRequestObj):
+    def __init__(self):
         self.title = ""
-        self.lineSeriesValueX = Template(q).lineSeriesValueX
+        self.lineSeriesValueX = TemplateDefaultValues().lineSeriesValueX
         self.xAxisTitleText = self.lineSeriesValueX
         self.yAxisTitleText = ""
 
@@ -24,7 +30,7 @@ class Template:
     def __init__(self, q: ModelRequestObj):
         self.model = self.__class__.__name__
         self.title = self.model
-        self.lineSeriesValueX = "x"
+        self.lineSeriesValueX = TemplateDefaultValues().lineSeriesValueX
         self.lineSeriesValueY = "y_" + self.model
         self.lineSeriesName = self.lineSeriesValueY
 
