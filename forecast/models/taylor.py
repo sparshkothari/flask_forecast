@@ -122,9 +122,9 @@ class MaclaurinSineImplementation(TaylorImplementation):
         v_limit = 1.01
         if abs(v) > v_limit:
             if v >= 0.0:
-                return v_limit
+                return None
             else:
-                return -1.0 * v_limit
+                return None
         else:
             return v
 
