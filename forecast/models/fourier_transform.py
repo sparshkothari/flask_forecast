@@ -1,5 +1,6 @@
 # fourier_transform.py
 
+import numpy as np
 import utils
 from utils import UtilsJSONEncoder, UnitsLabel
 from forecast.models.template import Template, GenerateArray, \
@@ -46,10 +47,44 @@ class FourierTransform(Template):
         t = UtilsJSONEncoder()
         t.encode(self.wave_transform)
 
-    def iterate(self, index):
-        super().iterate(index)
-        x = index
+    def iterate(self, index, i):
+        super().iterate(index, i)
+        x = i
         self.data_point = self.wave_transform.method(x)
+
+
+class FourierTransformFFT(FourierTransform):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.fft_shifted = []
+        self.freq_shifted = []
+
+    def populate(self, signal, sampling_frequency):
+        # Perform the FFT
+        # The FFT result is complex, so we take the absolute value for magnitude
+        # and shift the zero-frequency component to the center for better visualization.
+        fft_result = np.fft.fft(signal)
+        fft_magnitude = np.abs(fft_result)
+        self.fft_shifted = np.fft.fftshift(fft_magnitude).tolist()
+
+        # Generate frequency array
+        # The frequencies corresponding to the FFT result
+        frequencies = np.fft.fftfreq(len(signal), 1 / sampling_frequency)
+        self.freq_shifted = np.fft.fftshift(frequencies).tolist()
+
+    def iterate(self, index, i):
+        super().iterate(index, i)
+        self.data_point = self.fft_shifted[index]
+
+    def simulate_model(self):
+        index = 0
+        for i in np.arange(self.index_start, self.index_stop, self.increment):
+            self.iterate(index, i)
+            f = self.freq_shifted[index]
+            data_item = {self.lineSeriesValueX: f, self.lineSeriesValueY: self.data_point}
+            self.data.append(data_item)
+            index += 1
 
 
 class FourierTransformSquareWave(FourierTransform):
