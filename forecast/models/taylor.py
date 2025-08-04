@@ -36,6 +36,8 @@ class TaylorChartVariables(ChartVariables):
 class SineRegular(Template):
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
+        self.xAxisTitleText = UnitsLabel.time_nano_seconds
+        self.yAxisTitleText = UnitsLabel.units
 
     def iterate(self, index):
         super().iterate(index)
@@ -47,6 +49,8 @@ class Taylor(Template):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
+        self.xAxisTitleText = UnitsLabel.time_nano_seconds
+        self.yAxisTitleText = UnitsLabel.units
         self.taylor_implementation = TaylorImplementation()
 
         t = UtilsJSONEncoder()

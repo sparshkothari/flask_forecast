@@ -53,29 +53,38 @@ let Profile = {
         am4core.useTheme(am4themes_animated);
         let chartVariables = data[0]
         let objDictArray = data[1]
+        let spliceData = data[2][0]
         let chartTitle = chartVariables["title"]
         let chartDisplayType = parseInt(document.getElementById("displayType").value);
         let chartDivElementIds = Profile.chartUtils.createChartDivElements(objDictArray.length)
 
-        let splicedData = Profile.dataUtils.spliceData(chartVariables, objDictArray)
         let xAxisTitleText = chartVariables["xAxisTitleText"]
         let yAxisTitleText = chartVariables["yAxisTitleText"]
-        let chartParent = Profile.chartUtils.createXYValueAxisChart(chartDivElementIds[0], chartTitle, splicedData, xAxisTitleText, yAxisTitleText)
+        let lineSeriesValueX = chartVariables["lineSeriesValueX"];
+
+        let chartParent;
+        if (spliceData) {
+            let splicedData = Profile.dataUtils.spliceData(chartVariables, objDictArray)
+            chartParent = Profile.chartUtils.createXYValueAxisChart(chartDivElementIds[0], chartTitle, splicedData, xAxisTitleText, yAxisTitleText)
+        }else{
+            document.getElementById(chartDivElementIds[0]).style.height = "10px"
+        }
 
         for (let [index, j] of objDictArray.entries()) {
-            let lineSeriesValueX = chartVariables["lineSeriesValueX"];
-            let lineSeriesValueY = j["lineSeriesValueY"]
-            let lineSeriesName = j["lineSeriesName"]
-            Profile.chartUtils.createChartLineSeries(chartParent, lineSeriesValueX, lineSeriesValueY, lineSeriesName, chartDisplayType)
-            if (objDictArray.length > 1) {
-                let jData = j["data"]
-                let jTitle = j["title"]
-                let jLineSeriesValueX = lineSeriesValueX
-                let jLineSeriesValueY = lineSeriesValueY
-                let jLineSeriesName = lineSeriesName
-                let chartJ = Profile.chartUtils.createXYValueAxisChart(chartDivElementIds[index + 1], jTitle, jData, xAxisTitleText, yAxisTitleText)
-                Profile.chartUtils.createChartLineSeries(chartJ, jLineSeriesValueX, jLineSeriesValueY, jLineSeriesName, chartDisplayType)
+
+            let jData = j["data"]
+            let jTitle = j["title"]
+            let jXAxisTitleText = j["xAxisTitleText"]
+            let jYAxisTitleText = j["yAxisTitleText"]
+            let jLineSeriesValueX = j["lineSeriesValueX"];
+            let jLineSeriesValueY = j["lineSeriesValueY"]
+            let jLineSeriesName = j["lineSeriesName"]
+             if (spliceData){
+                 Profile.chartUtils.createChartLineSeries(chartParent, lineSeriesValueX, jLineSeriesValueY, jLineSeriesName, chartDisplayType)
             }
+            let chartJ = Profile.chartUtils.createXYValueAxisChart(chartDivElementIds[index + 1], jTitle, jData, jXAxisTitleText, jYAxisTitleText)
+            Profile.chartUtils.createChartLineSeries(chartJ, jLineSeriesValueX, jLineSeriesValueY, jLineSeriesName, chartDisplayType)
+
         }
     },
     chartUtils: {
