@@ -1,10 +1,11 @@
 # fourier_analysis.py
 
 import math
+from utils import UnitsLabel
 from forecast.models.template import GenerateArray, \
     ChartVariables
 from forecast.models.fourier import FourierSquareWaveImpl2
-from forecast.models.fourier_transform import FourierTransformSquareWave
+from forecast.models.fourier_transform import FourierTransformFFT
 from models import ModelRequestObj
 
 
@@ -29,13 +30,15 @@ class FourierSquareWave1(FourierSquareWaveImpl2):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
+        self.xAxisTitleText = UnitsLabel.time_seconds
         frequency = 5.0
         duty_cycle = 0.5
         self.wave.populate(q, frequency, duty_cycle)
 
 
-class FourierTransformSquareWave1(FourierTransformSquareWave):
+class FourierTransformSquareWave1(FourierTransformFFT):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.wave_transform.populate(period=(2.0*math.pi), amplitude=1.0)
+        o = FourierSquareWave1(q)
+        self.populate(o.wave.np_wave(q), o.wave.sampling_frequency)

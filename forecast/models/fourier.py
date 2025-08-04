@@ -163,6 +163,9 @@ class WaveImpl2:
         self.frequency = frequency
         self.duty_cycle = duty_cycle
 
+    def np_wave(self, q: ModelRequestObj):
+        return ""
+
     def method(self, index: int, time: float = 0.0):
         return self.wave[index]
 
@@ -192,6 +195,11 @@ class SquareWaveImpl2(WaveImpl2):
         super().populate(q, frequency, duty_cycle)
         t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
         self.wave = signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle).tolist()
+
+    def np_wave(self, q: ModelRequestObj):
+        super().np_wave(q)
+        t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
+        return signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle)
 
 
 class TriangleWave(WaveImpl1):

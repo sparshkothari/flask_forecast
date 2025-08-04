@@ -38,7 +38,7 @@ let Profile = {
             a.setAttribute("class", "w3-bar-item")
             let aHTML = "";
             for (let [key, value] of Object.entries(e)) {
-                if (key !== "data" && key!== "wave") {
+                if (key !== "data" && key!== "wave" && key!== "fft_shifted" && key!== "freq_shifted") {
                     if (typeof(value) === "object"){
                         value = JSON.stringify(value)
                     }
