@@ -17,7 +17,7 @@ class FourierAnalysisArray(GenerateArray):
         q.index_stop = 1
         q.increment = 0.001
 
-        if q.base_model == 9:
+        if q.base_model == 8:
             self.array.append(FourierSquareWave1(q))
             self.array.append(FourierTransformSquareWave1(q))
 
