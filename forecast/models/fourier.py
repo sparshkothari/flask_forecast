@@ -155,7 +155,7 @@ class WaveImpl2:
         self.sampling_frequency = self.duration/q.increment
         self.frequency = frequency
         self.duty_cycle = duty_cycle
-        self.wave = []
+        self.wave_data = []
 
     def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.5):
         self.duration = q.index_stop - q.index_start
@@ -167,7 +167,7 @@ class WaveImpl2:
         return ""
 
     def method(self, index: int, time: float = 0.0):
-        return self.wave[index]
+        return self.wave_data[index]
 
 
 class SquareWaveImpl1(WaveImpl1):
@@ -189,12 +189,12 @@ class SquareWaveImpl2(WaveImpl2):
     def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.5):
         super().__init__(q, frequency, duty_cycle)
         t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
-        self.wave = signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle).tolist()
+        self.wave_data = signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle).tolist()
 
     def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.5):
         super().populate(q, frequency, duty_cycle)
         t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
-        self.wave = signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle).tolist()
+        self.wave_data = signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle).tolist()
 
     def np_wave(self, q: ModelRequestObj):
         super().np_wave(q)

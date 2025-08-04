@@ -41,4 +41,4 @@ class FourierTransformSquareWave1(FourierTransformFFT):
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         o = FourierSquareWave1(q)
-        self.populate(o.wave.np_wave(q), o.wave.sampling_frequency)
+        self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency)
