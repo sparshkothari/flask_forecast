@@ -53,14 +53,25 @@ class FourierTransform(Template):
         self.data_point = self.wave_transform.method(x)
 
 
-class FourierTransformFFT(FourierTransform):
+class FourierTransformFFT(Template):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
+        self.xAxisTitleText = UnitsLabel.frequency_hertz
+        self.yAxisTitleText = UnitsLabel.units
+        self.sampling_frequency = 0
+        self.frequency = 0.0
+        self.duration = 0.0
+        self.duty_cycle = 0.0
         self.fft_shifted = []
         self.freq_shifted = []
 
-    def populate(self, signal, sampling_frequency):
+    def populate(self, signal, sampling_frequency, frequency, duration, duty_cycle):
+
+        self.sampling_frequency = sampling_frequency
+        self.frequency = frequency
+        self.duration = duration
+        self.duty_cycle = duty_cycle
         # Perform the FFT
         # The FFT result is complex, so we take the absolute value for magnitude
         # and shift the zero-frequency component to the center for better visualization.
@@ -70,7 +81,7 @@ class FourierTransformFFT(FourierTransform):
 
         # Generate frequency array
         # The frequencies corresponding to the FFT result
-        frequencies = np.fft.fftfreq(len(signal), 1 / sampling_frequency)
+        frequencies = np.fft.fftfreq(len(signal), 1 / self.sampling_frequency)
         self.freq_shifted = np.fft.fftshift(frequencies).tolist()
 
     def iterate(self, index, i):
@@ -82,8 +93,9 @@ class FourierTransformFFT(FourierTransform):
         for i in np.arange(self.index_start, self.index_stop, self.increment):
             self.iterate(index, i)
             f = self.freq_shifted[index]
-            data_item = {self.lineSeriesValueX: f, self.lineSeriesValueY: self.data_point}
-            self.data.append(data_item)
+            if np.abs(f) < (self.frequency * 10):
+                data_item = {self.lineSeriesValueX: f, self.lineSeriesValueY: self.data_point}
+                self.data.append(data_item)
             index += 1
 
 
