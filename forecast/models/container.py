@@ -13,6 +13,7 @@ class Container:
         self.models = []
         self.simulated_models = []
         self.chartVariables = {}
+        self.spliceData = [True]
         if q.base_model == 0:
             self.models = WaterArray(q).array
             self.chartVariables = WaterChartVariables().__dict__
@@ -36,4 +37,5 @@ class Container:
             self.simulated_models.append(model.__dict__)
         o.append(self.chartVariables)
         o.append(self.simulated_models)
+        o.append(self.spliceData)
         return o

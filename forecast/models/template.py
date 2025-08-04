@@ -19,7 +19,7 @@ class ChartVariables:
     def __init__(self):
         self.title = ""
         self.lineSeriesValueX = TemplateDefaultValues.lineSeriesValueX
-        self.xAxisTitleText = self.lineSeriesValueX
+        self.xAxisTitleText = ""
         self.yAxisTitleText = ""
 
 
@@ -28,6 +28,8 @@ class Template:
     def __init__(self, q: ModelRequestObj):
         self.model = self.__class__.__name__
         self.title = self.model
+        self.xAxisTitleText = ""
+        self.yAxisTitleText = ""
         self.lineSeriesValueX = TemplateDefaultValues.lineSeriesValueX
         self.lineSeriesValueY = "y_" + self.model
         self.lineSeriesName = self.lineSeriesValueY

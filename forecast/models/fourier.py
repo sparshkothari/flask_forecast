@@ -44,6 +44,8 @@ class Fourier(Template):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
+        self.xAxisTitleText = UnitsLabel.time_nano_seconds
+        self.yAxisTitleText = UnitsLabel.units
         self.wave = Wave()
 
         t = UtilsJSONEncoder()

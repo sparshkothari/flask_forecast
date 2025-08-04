@@ -41,6 +41,8 @@ class FourierTransform(Template):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
+        self.xAxisTitleText = UnitsLabel.frequency_hertz
+        self.yAxisTitleText = UnitsLabel.units
         self.wave_transform = WaveTransform()
 
         t = UtilsJSONEncoder()
