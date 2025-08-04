@@ -1,7 +1,5 @@
 # fourier_transform.py
 
-import math
-
 import utils
 from utils import UtilsJSONEncoder, UnitsLabel
 from forecast.models.template import Template, GenerateArray, \
@@ -54,7 +52,7 @@ class FourierTransform(Template):
         self.data_point = self.wave_transform.method(x)
 
 
-class FourierTransformSquareWave1(FourierTransform):
+class FourierTransformSquareWave(FourierTransform):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
@@ -63,34 +61,8 @@ class FourierTransformSquareWave1(FourierTransform):
         t = UtilsJSONEncoder()
         t.encode(self.wave_transform)
 
-        self.wave_transform.populate(1.0, 1.0)
 
-
-class FourierTransformSquareWave2(FourierTransform):
-
-    def __init__(self, q: ModelRequestObj):
-        super().__init__(q)
-        self.wave_transform = SquareWaveTransform()
-
-        t = UtilsJSONEncoder()
-        t.encode(self.wave_transform)
-
-        self.wave_transform.populate(3.0, 1.0)
-
-
-class FourierTransformSquareWave3(FourierTransform):
-
-    def __init__(self, q: ModelRequestObj):
-        super().__init__(q)
-        self.wave_transform = SquareWaveTransform()
-
-        t = UtilsJSONEncoder()
-        t.encode(self.wave_transform)
-
-        self.wave_transform.populate(5.0, 1.0)
-
-
-class FourierTransformTriangleWave1(FourierTransform):
+class FourierTransformTriangleWave(FourierTransform):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
@@ -99,6 +71,32 @@ class FourierTransformTriangleWave1(FourierTransform):
         t = UtilsJSONEncoder()
         t.encode(self.wave_transform)
 
+
+class FourierTransformSquareWave1(FourierTransformSquareWave):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.wave_transform.populate(1.0, 1.0)
+
+
+class FourierTransformSquareWave2(FourierTransformSquareWave):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.wave_transform.populate(3.0, 1.0)
+
+
+class FourierTransformSquareWave3(FourierTransformSquareWave):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.wave_transform.populate(5.0, 1.0)
+
+
+class FourierTransformTriangleWave1(FourierTransformTriangleWave):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
         self.wave_transform.populate(1.0, 1.0)
 
 
