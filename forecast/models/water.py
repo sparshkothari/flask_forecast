@@ -58,6 +58,8 @@ class Water(Template):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
+        self.xAxisTitleText = UnitsLabel.time_months
+        self.yAxisTitleText = UnitsLabel.liters
         self.consume = Consume()
         self.rain = Rain()
         self.import_w = ImportW()

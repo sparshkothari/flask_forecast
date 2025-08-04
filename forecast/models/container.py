@@ -3,6 +3,7 @@ from forecast.models.water import WaterArray, WaterChartVariables
 from forecast.models.population import PopulationArray, PopulationChartVariables
 from forecast.models.fourier import FourierArray, FourierChartVariables
 from forecast.models.fourier_transform import FourierTransformArray, FourierTransformChartVariables
+from forecast.models.fourier_analysis import FourierAnalysisArray, FourierAnalysisChartVariables
 from forecast.models.taylor import TaylorArray, TaylorChartVariables
 from models import ModelRequestObj
 
@@ -13,6 +14,7 @@ class Container:
         self.models = []
         self.simulated_models = []
         self.chartVariables = {}
+        self.spliceData = [True]
         if q.base_model == 0:
             self.models = WaterArray(q).array
             self.chartVariables = WaterChartVariables().__dict__
@@ -28,6 +30,10 @@ class Container:
         elif q.base_model == 8:
             self.models = TaylorArray(q).array
             self.chartVariables = TaylorChartVariables().__dict__
+        elif q.base_model == 9:
+            self.spliceData[0] = False
+            self.models = FourierAnalysisArray(q).array
+            self.chartVariables = FourierAnalysisChartVariables().__dict__
 
     def run(self):
         o = []
@@ -36,4 +42,5 @@ class Container:
             self.simulated_models.append(model.__dict__)
         o.append(self.chartVariables)
         o.append(self.simulated_models)
+        o.append(self.spliceData)
         return o

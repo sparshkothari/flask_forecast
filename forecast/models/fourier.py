@@ -44,6 +44,8 @@ class Fourier(Template):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
+        self.xAxisTitleText = UnitsLabel.time_nano_seconds
+        self.yAxisTitleText = UnitsLabel.units
         self.wave = Wave()
 
         t = UtilsJSONEncoder()
@@ -55,8 +57,7 @@ class Fourier(Template):
         self.data_point = self.wave.method(x)
 
 
-class FourierSquareWave1(Fourier):
-
+class FourierSquareWave(Fourier):
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         self.wave = SquareWave()
@@ -64,66 +65,55 @@ class FourierSquareWave1(Fourier):
         t = UtilsJSONEncoder()
         t.encode(self.wave)
 
+
+class FourierTriangleWave(Fourier):
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.wave = TriangleWave()
+
+        t = UtilsJSONEncoder()
+        t.encode(self.wave)
+
+
+class FourierSquareWave1(FourierSquareWave):
+
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
         self.wave.populate(3)
 
 
-class FourierSquareWave2(Fourier):
+class FourierSquareWave2(FourierSquareWave):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.wave = SquareWave()
-
-        t = UtilsJSONEncoder()
-        t.encode(self.wave)
-
         self.wave.populate(5)
 
 
-class FourierSquareWave3(Fourier):
+class FourierSquareWave3(FourierSquareWave):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.wave = SquareWave()
-
-        t = UtilsJSONEncoder()
-        t.encode(self.wave)
-
         self.wave.populate(20)
 
 
-class FourierTriangleWave1(Fourier):
+class FourierTriangleWave1(FourierTriangleWave):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.wave = TriangleWave()
-
-        t = UtilsJSONEncoder()
-        t.encode(self.wave)
-
         self.wave.populate(2)
 
 
-class FourierTriangleWave2(Fourier):
+class FourierTriangleWave2(FourierTriangleWave):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.wave = TriangleWave()
-
-        t = UtilsJSONEncoder()
-        t.encode(self.wave)
-
         self.wave.populate(3)
 
 
-class FourierTriangleWave3(Fourier):
+class FourierTriangleWave3(FourierTriangleWave):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        self.wave = TriangleWave()
-
-        t = UtilsJSONEncoder()
-        t.encode(self.wave)
-
         self.wave.populate(10)
 
 

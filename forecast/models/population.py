@@ -32,6 +32,8 @@ class Population(Template):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
+        self.xAxisTitleText = UnitsLabel.time_months
+        self.yAxisTitleText = UnitsLabel.people_thousands
         self.growth = Growth()
 
         t = UtilsJSONEncoder()
