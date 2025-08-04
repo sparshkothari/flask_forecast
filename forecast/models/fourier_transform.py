@@ -46,9 +46,9 @@ class FourierTransform(Template):
         t = UtilsJSONEncoder()
         t.encode(self.wave_transform)
 
-    def iterate(self, index):
-        super().iterate(index)
-        x = index
+    def iterate(self, index, i):
+        super().iterate(index, i)
+        x = i
         self.data_point = self.wave_transform.method(x)
 
 

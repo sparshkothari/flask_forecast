@@ -42,10 +42,12 @@ class Template:
         self.data = []
 
     def simulate_model(self):
-        for i in np.arange(self.index_start, self.index_stop + 1, self.increment):
-            self.iterate(i)
+        index = 0
+        for i in np.arange(self.index_start, self.index_stop, self.increment):
+            self.iterate(index, i)
             data_item = {self.lineSeriesValueX: i, self.lineSeriesValueY: self.data_point}
             self.data.append(data_item)
+            index += 1
 
-    def iterate(self, index):
+    def iterate(self, index, i):
         pass
