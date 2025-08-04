@@ -39,9 +39,9 @@ class SineRegular(Template):
         self.xAxisTitleText = UnitsLabel.time_nano_seconds
         self.yAxisTitleText = UnitsLabel.units
 
-    def iterate(self, index):
-        super().iterate(index)
-        x = index
+    def iterate(self, index, i):
+        super().iterate(index, i)
+        x = i
         self.data_point = math.sin(float(x))
 
 
@@ -56,9 +56,9 @@ class Taylor(Template):
         t = UtilsJSONEncoder()
         t.encode(self.taylor_implementation)
 
-    def iterate(self, index):
-        super().iterate(index)
-        x = index
+    def iterate(self, index, i):
+        super().iterate(index, i)
+        x = i
         self.data_point = self.taylor_implementation.method(x)
 
 

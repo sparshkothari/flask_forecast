@@ -73,9 +73,9 @@ class Water(Template):
         t.encode(self.contaminate)
         t.encode(self.recycle)
 
-    def iterate(self, index):
-        super().iterate(index)
-        x = index
+    def iterate(self, index, i):
+        super().iterate(index, i)
+        x = i
         self.data_point += (self.consume.method(x) +
                             self.rain.method(x) +
                             self.import_w.method(x) +

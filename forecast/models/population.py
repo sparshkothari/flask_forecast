@@ -39,9 +39,9 @@ class Population(Template):
         t = UtilsJSONEncoder()
         t.encode(self.growth)
 
-    def iterate(self, index):
-        super().iterate(index)
-        x = index
+    def iterate(self, index, i):
+        super().iterate(index, i)
+        x = i
         self.data_point = self.growth.method(x)
 
 
