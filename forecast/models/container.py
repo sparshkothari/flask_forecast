@@ -1,6 +1,4 @@
 # container.py
-from forecast.models.water import WaterArray, WaterChartVariables
-from forecast.models.population import PopulationArray, PopulationChartVariables
 from forecast.models.fourier import FourierArray, FourierChartVariables
 from forecast.models.fourier_transform import FourierTransformArray, FourierTransformChartVariables
 from forecast.models.fourier_analysis import FourierAnalysisArray, FourierAnalysisChartVariables
@@ -15,13 +13,7 @@ class Container:
         self.simulated_models = []
         self.chartVariables = {}
         self.spliceData = [True]
-        if q.base_model == 0:
-            self.models = WaterArray(q).array
-            self.chartVariables = WaterChartVariables().__dict__
-        elif q.base_model == 1:
-            self.models = PopulationArray(q).array
-            self.chartVariables = PopulationChartVariables().__dict__
-        elif q.base_model == 2 or q.base_model == 3 or q.base_model == 4:
+        if q.base_model == 2 or q.base_model == 3 or q.base_model == 4:
             self.models = FourierArray(q).array
             self.chartVariables = FourierChartVariables().__dict__
         elif q.base_model == 5 or q.base_model == 6 or q.base_model == 7:
