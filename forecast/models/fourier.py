@@ -72,6 +72,10 @@ class FourierSquareWaveImpl2(Fourier):
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         self.wave = SquareWaveImpl2(q)
+        self.duration = self.wave.duration
+        self.sampling_frequency = self.wave.sampling_frequency
+        self.frequency = self.wave.frequency
+        self.duty_cycle = self.wave.duty_cycle
 
         t = UtilsJSONEncoder()
         t.encode(self.wave)

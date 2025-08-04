@@ -53,19 +53,25 @@ class FourierTransform(Template):
         self.data_point = self.wave_transform.method(x)
 
 
-class FourierTransformFFT(FourierTransform):
+class FourierTransformFFT(Template):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
+        self.xAxisTitleText = UnitsLabel.frequency_hertz
+        self.yAxisTitleText = UnitsLabel.units
         self.sampling_frequency = 0
         self.frequency = 0.0
+        self.duration = 0.0
+        self.duty_cycle = 0.0
         self.fft_shifted = []
         self.freq_shifted = []
 
-    def populate(self, signal, sampling_frequency, frequency):
+    def populate(self, signal, sampling_frequency, frequency, duration, duty_cycle):
 
         self.sampling_frequency = sampling_frequency
         self.frequency = frequency
+        self.duration = duration
+        self.duty_cycle = duty_cycle
         # Perform the FFT
         # The FFT result is complex, so we take the absolute value for magnitude
         # and shift the zero-frequency component to the center for better visualization.

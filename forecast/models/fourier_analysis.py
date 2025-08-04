@@ -34,6 +34,10 @@ class FourierSquareWave1(FourierSquareWaveImpl2):
         frequency = 5.0
         duty_cycle = 0.5
         self.wave.populate(q, frequency, duty_cycle)
+        self.duration = self.wave.duration
+        self.sampling_frequency = self.wave.sampling_frequency
+        self.frequency = self.wave.frequency
+        self.duty_cycle = self.wave.duty_cycle
 
 
 class FourierTransformSquareWave1(FourierTransformFFT):
@@ -41,4 +45,4 @@ class FourierTransformSquareWave1(FourierTransformFFT):
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         o = FourierSquareWave1(q)
-        self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency)
+        self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration, o.wave.duty_cycle)
