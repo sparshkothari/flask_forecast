@@ -13,9 +13,9 @@ class FourierAnalysisArray(GenerateArray):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
-        q.index_start = -10.0
-        q.index_stop = 10.0
-        q.increment = 0.01
+        q.index_start = 0
+        q.index_stop = 1
+        q.increment = 0.001
 
         if q.base_model == 9:
             self.array.append(FourierSquareWave1(q))

@@ -191,7 +191,7 @@ class SquareWaveImpl2(WaveImpl2):
         t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
         self.wave = signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle).tolist()
 
-    def populate(self, q: ModelRequestObj, duration: float = 0.0, frequency: float = 0.0, duty_cycle: float = 0.5):
+    def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.5):
         super().populate(q, frequency, duty_cycle)
         t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
         self.wave = signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle).tolist()
