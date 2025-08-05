@@ -40,6 +40,8 @@ class FourierWaveImpl1(Fourier):
             self.wave = TriangleWaveImpl1()
         elif waveform == Waveform.parabola:
             self.wave = ParabolaWaveImpl1()
+        elif waveform == Waveform.exponential:
+            self.wave = ExponentialWaveImpl1()
 
         self.wave.populate(n_sum_limit)
         t = UtilsJSONEncoder()
@@ -107,6 +109,20 @@ class ParabolaWaveImpl1(WaveImpl1):
         return h * math.cos(i * t)
 
 
+class ExponentialWaveImpl1(WaveImpl1):
+
+    def __init__(self, n_sum_limit: int = 0):
+        super().__init__(n_sum_limit)
+        self.a_initial = math.sinh(math.pi)/math.pi
+
+    def method_impl(self, i: float = 0.0, time: float = 0.0):
+        super().method_impl(i, time)
+        t = time
+        o = 2 * (math.sinh(math.pi)/math.pi)
+        h = math.pow(-1.0, i)/(1 + math.pow(i, 2))
+        return o * h * (math.cos(i*t) - (i*math.sin(i*t)))
+
+
 class FourierWaveImpl2(Fourier):
     def __init__(self, q: ModelRequestObj, waveform: str, frequency: float = 0.0, duty_cycle=None, width=None):
         super().__init__(q)
@@ -127,6 +143,9 @@ class FourierWaveImpl2(Fourier):
             self.width = self.wave.width
         elif waveform == Waveform.parabola:
             self.wave = ParabolaWaveImpl2(q)
+            self.wave.populate(q, frequency=frequency)
+        elif waveform == Waveform.exponential:
+            self.wave = ExponentialWaveImpl2(q)
             self.wave.populate(q, frequency=frequency)
 
         self.duration = self.wave.duration
@@ -238,6 +257,13 @@ class ParabolaWaveImpl2(CustomWaveImpl2):
         return a * (t - x0) * (t - x1)
 
 
+class ExponentialWaveImpl2(CustomWaveImpl2):
+
+    def wave_equation(self, q: ModelRequestObj, t):
+        super().wave_equation(q, t)
+        return math.e**(4*t)
+
+
 class FourierTransformFFT(Template):
 
     def __init__(self, q: ModelRequestObj, o: FourierWaveImpl2, waveform: str):
@@ -265,7 +291,7 @@ class FourierTransformFFT(Template):
         elif waveform == Waveform.triangle:
             self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
                           width=o.wave.width)
-        elif waveform == Waveform.parabola:
+        else:
             self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration)
 
     def populate(self, signal_s, sampling_frequency, frequency, duration, duty_cycle: float = None,

@@ -27,6 +27,10 @@ class FourierAnalysisArray(GenerateArray):
             a = FourierWaveImpl2(q, waveform=Waveform.parabola, frequency=5.0)
             self.array.append(a)
             self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.parabola))
+        elif q.waveform == 3:
+            a = FourierWaveImpl2(q, waveform=Waveform.exponential, frequency=2.0)
+            self.array.append(a)
+            self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.exponential))
 
 
 class FourierAnalysisChartVariables(ChartVariables):
