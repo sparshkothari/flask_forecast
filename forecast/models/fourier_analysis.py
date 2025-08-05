@@ -3,8 +3,7 @@
 from utils import WaveTypes
 from forecast.models.template import GenerateArray, \
     ChartVariables
-from forecast.models.fourier import FourierWaveImpl2
-from forecast.models.fourier_transform import FourierTransformFFT
+from forecast.models.fourier_utils import FourierWaveImpl2, FourierTransformFFT
 from models import ModelRequestObj
 
 
