@@ -151,3 +151,8 @@ class UnitsLabel:
     units = "units"
 
     frequency_hertz = "frequency (hertz)"
+
+
+class WaveTypes:
+    square = "square_wave"
+    triangle = "triangle_wave"
