@@ -3,7 +3,7 @@
 import math
 import numpy as np
 from scipy import signal
-from utils import UtilsJSONEncoder, UnitsLabel, WaveTypes
+from utils import UtilsJSONEncoder, UnitsLabel, Waveform
 from forecast.models.template import Template
 from models import ModelRequestObj
 
@@ -27,46 +27,21 @@ class Fourier(Template):
 
 class FourierWaveImpl1(Fourier):
 
-    def __init__(self, q: ModelRequestObj, n_sum_limit: int, wave_type: str):
+    def __init__(self, q: ModelRequestObj, n_sum_limit: int, waveform: str):
         super().__init__(q)
-        self.model += "_wave_type:_" + wave_type + "_n_sum_limit:_" + str(n_sum_limit)
+        self.model += "_waveform:_" + waveform + "_n_sum_limit:_" + str(n_sum_limit)
         self.title = self.model
         self.lineSeriesValueY = "y_" + self.model
         self.lineSeriesName = self.lineSeriesValueY
         self.wave = None
-        if wave_type == WaveTypes.square:
+        if waveform == Waveform.square:
             self.wave = SquareWaveImpl1()
-        elif wave_type == WaveTypes.triangle:
+        elif waveform == Waveform.triangle:
             self.wave = TriangleWaveImpl1()
+        elif waveform == Waveform.parabola:
+            self.wave = ParabolaWaveImpl1()
 
         self.wave.populate(n_sum_limit)
-        t = UtilsJSONEncoder()
-        t.encode(self.wave)
-
-
-class FourierWaveImpl2(Fourier):
-    def __init__(self, q: ModelRequestObj, wave_type: str, frequency: float = 0.0, duty_cycle=None, width=None):
-        super().__init__(q)
-        self.model += "_wave_type:_" + wave_type
-        self.title = self.model
-        self.lineSeriesValueY = "y_" + self.model
-        self.lineSeriesName = self.lineSeriesValueY
-        self.wave = None
-        self.duty_cycle = None
-        self.width = None
-        if wave_type == WaveTypes.square:
-            self.wave = SquareWaveImpl2(q)
-            self.wave.populate(q, frequency=frequency, duty_cycle=duty_cycle)
-            self.duty_cycle = self.wave.duty_cycle
-        elif wave_type == WaveTypes.triangle:
-            self.wave = TriangleWaveImpl2(q)
-            self.wave.populate(q, frequency=frequency, width=width)
-            self.width = self.wave.width
-
-        self.duration = self.wave.duration
-        self.sampling_frequency = self.wave.sampling_frequency
-        self.frequency = self.wave.frequency
-
         t = UtilsJSONEncoder()
         t.encode(self.wave)
 
@@ -119,15 +94,62 @@ class TriangleWaveImpl1(WaveImpl1):
         return h1 * math.cos(h * math.pi * t) * -1.0
 
 
+class ParabolaWaveImpl1(WaveImpl1):
+
+    def __init__(self, n_sum_limit: int = 0):
+        super().__init__(n_sum_limit)
+        self.a_initial = math.pow(math.pi, 2) / 3
+
+    def method_impl(self, i: float = 0.0, time: float = 0.0):
+        super().method_impl(i, time)
+        t = time
+        h = (4 * math.pow(-1, i)) / math.pow(i, 2)
+        return h * math.cos(i * t)
+
+
+class FourierWaveImpl2(Fourier):
+    def __init__(self, q: ModelRequestObj, waveform: str, frequency: float = 0.0, duty_cycle=None, width=None):
+        super().__init__(q)
+        self.model += "_waveform:_" + waveform
+        self.title = self.model
+        self.lineSeriesValueY = "y_" + self.model
+        self.lineSeriesName = self.lineSeriesValueY
+        self.wave = None
+        self.duty_cycle = None
+        self.width = None
+        if waveform == Waveform.square:
+            self.wave = SquareWaveImpl2(q)
+            self.wave.populate(q, frequency=frequency, duty_cycle=duty_cycle)
+            self.duty_cycle = self.wave.duty_cycle
+        elif waveform == Waveform.triangle:
+            self.wave = TriangleWaveImpl2(q)
+            self.wave.populate(q, frequency=frequency, width=width)
+            self.width = self.wave.width
+        elif waveform == Waveform.parabola:
+            self.wave = ParabolaWaveImpl2(q)
+            self.wave.populate(q, frequency=frequency)
+
+        self.duration = self.wave.duration
+        self.sampling_frequency = self.wave.sampling_frequency
+        self.frequency = self.wave.frequency
+
+        t = UtilsJSONEncoder()
+        t.encode(self.wave)
+
+
 class WaveImpl2:
 
     def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
         self.duration = q.index_stop - q.index_start
-        self.sampling_frequency = self.duration/q.increment
+        self.sampling_frequency = self.duration / q.increment
         self.frequency = frequency
         self.duty_cycle = duty_cycle
         self.width = width
         self.wave_data = []
+        self.custom_params = {}
+
+    def set_custom_params(self, params: dict):
+        self.custom_params = params
 
     def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
         self.duration = q.index_stop - q.index_start
@@ -147,8 +169,6 @@ class SquareWaveImpl2(WaveImpl2):
 
     def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
         super().__init__(q=q, frequency=frequency, duty_cycle=duty_cycle)
-        t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
-        self.wave_data = signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle).tolist()
 
     def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
         super().populate(q=q, frequency=frequency, duty_cycle=duty_cycle)
@@ -165,8 +185,6 @@ class TriangleWaveImpl2(WaveImpl2):
 
     def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
         super().__init__(q=q, frequency=frequency, width=width)
-        t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
-        self.wave_data = signal.sawtooth(2 * np.pi * self.frequency * t, width=self.width).tolist()
 
     def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
         super().populate(q=q, frequency=frequency, width=width)
@@ -179,15 +197,56 @@ class TriangleWaveImpl2(WaveImpl2):
         return signal.sawtooth(2 * np.pi * self.frequency * t, width=self.width).tolist()
 
 
+class CustomWaveImpl2(WaveImpl2):
+
+    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+        super().__init__(q=q, frequency=frequency)
+        self.custom_params["a"] = -1.0
+
+    def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+        super().populate(q=q, frequency=frequency)
+        t_partial = self.fetch_t_partial(q)
+        self.wave_data = self.generate_wave(q, t_partial).tolist()
+
+    def fetch_t_partial(self, q: ModelRequestObj):
+        return np.linspace(q.index_start, q.index_start + self.duration / self.frequency,
+                                int(self.sampling_frequency / self.frequency), endpoint=False)
+
+    def generate_wave(self, q: ModelRequestObj, t_partial):
+        o = self.wave_equation(q, t_partial)
+        o_add = self.wave_equation(q, t_partial)
+        for i in range(0, int(self.frequency - 1)):
+            o = np.concatenate((o, o_add))
+        return o
+
+    def wave_equation(self, q: ModelRequestObj, t):
+        return t
+
+    def np_wave(self, q: ModelRequestObj):
+        super().np_wave(q)
+        t_partial = self.fetch_t_partial(q)
+        return self.generate_wave(q, t_partial)
+
+
+class ParabolaWaveImpl2(CustomWaveImpl2):
+
+    def wave_equation(self, q: ModelRequestObj, t):
+        super().wave_equation(q, t)
+        a = float(self.custom_params["a"])
+        x0 = q.index_start
+        x1 = q.index_start + self.duration/self.frequency
+        return a * (t - x0) * (t - x1)
+
+
 class FourierTransformFFT(Template):
 
-    def __init__(self, q: ModelRequestObj, o: FourierWaveImpl2, wave_type: str):
+    def __init__(self, q: ModelRequestObj, o: FourierWaveImpl2, waveform: str):
         super().__init__(q)
 
         self.xAxisTitleText = UnitsLabel.frequency_hertz
         self.yAxisTitleText = UnitsLabel.units
 
-        self.model += "_wave_type:_" + wave_type
+        self.model += "_waveform:_" + waveform
         self.title = self.model
         self.lineSeriesValueY = "y_" + self.model
         self.lineSeriesName = self.lineSeriesValueY
@@ -200,14 +259,17 @@ class FourierTransformFFT(Template):
         self.fft_shifted = []
         self.freq_shifted = []
 
-        if wave_type == WaveTypes.square:
+        if waveform == Waveform.square:
             self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
                           duty_cycle=o.wave.duty_cycle)
-        elif wave_type == WaveTypes.triangle:
+        elif waveform == Waveform.triangle:
             self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
                           width=o.wave.width)
+        elif waveform == Waveform.parabola:
+            self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration)
 
-    def populate(self, signal, sampling_frequency, frequency, duration, duty_cycle: float = None, width: float = None):
+    def populate(self, signal_s, sampling_frequency, frequency, duration, duty_cycle: float = None,
+                 width: float = None):
 
         self.sampling_frequency = sampling_frequency
         self.frequency = frequency
@@ -218,13 +280,13 @@ class FourierTransformFFT(Template):
         # Perform the FFT
         # The FFT result is complex, so we take the absolute value for magnitude
         # and shift the zero-frequency component to the center for better visualization.
-        fft_result = np.fft.fft(signal)
+        fft_result = np.fft.fft(signal_s)
         fft_magnitude = np.abs(fft_result)
         self.fft_shifted = np.fft.fftshift(fft_magnitude).tolist()
 
         # Generate frequency array
         # The frequencies corresponding to the FFT result
-        frequencies = np.fft.fftfreq(len(signal), 1 / self.sampling_frequency)
+        frequencies = np.fft.fftfreq(len(signal_s), 1 / self.sampling_frequency)
         self.freq_shifted = np.fft.fftshift(frequencies).tolist()
 
     def iterate(self, index, i):
@@ -241,4 +303,3 @@ class FourierTransformFFT(Template):
                 data_item = {self.lineSeriesValueX: f, self.lineSeriesValueY: self.data_point}
                 self.data.append(data_item)
             index += 1
-

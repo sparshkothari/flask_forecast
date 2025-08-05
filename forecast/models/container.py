@@ -11,10 +11,10 @@ class Container:
         self.simulated_models = []
         self.chartVariables = {}
         self.spliceData = [True]
-        if q.base_model == 2 or q.base_model == 3 or q.base_model == 4:
+        if q.base_model == 2:
             self.models = FourierSeriesArray(q).array
             self.chartVariables = FourierSeriesChartVariables().__dict__
-        elif q.base_model == 5:
+        elif q.base_model == 3:
             self.spliceData[0] = False
             self.models = FourierAnalysisArray(q).array
             self.chartVariables = FourierAnalysisChartVariables().__dict__
