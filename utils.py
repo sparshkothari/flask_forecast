@@ -153,6 +153,7 @@ class UnitsLabel:
     frequency_hertz = "frequency (hertz)"
 
 
-class WaveTypes:
+class Waveform:
     square = "square_wave"
     triangle = "triangle_wave"
+    parabola = "parabola_wave"

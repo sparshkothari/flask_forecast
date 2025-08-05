@@ -21,8 +21,10 @@ def profile():
 @views_bp.route('/simulate', methods=['POST'])
 def simulate():
     base_model = int(request.form["baseModel"])
+    waveform = int(request.form["waveform"])
     limit_bounds = bool(request.form["limitBounds"] == "1")
     q = ModelRequestObj(base_model=base_model,
+                        waveform=waveform,
                         index_start=0.0,
                         index_stop=0.0,
                         increment=0.0,

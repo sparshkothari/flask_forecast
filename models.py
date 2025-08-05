@@ -3,6 +3,7 @@ from mongoengine import Document, StringField, FloatField, IntField, BooleanFiel
 
 class ModelRequestObj(Document):
     base_model = IntField(required=True)
+    waveform = IntField(required=True)
     index_start = FloatField(required=True)
     index_stop = FloatField(required=True)
     increment = FloatField(required=True)

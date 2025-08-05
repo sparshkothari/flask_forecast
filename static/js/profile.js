@@ -11,6 +11,7 @@ let Profile = {
             $.post("/simulate",
                 {
                     baseModel: document.getElementById("baseModel").value,
+                    waveform: document.getElementById("waveform").value,
                     limitBounds: document.getElementById("limitBounds").value
                 }
             )

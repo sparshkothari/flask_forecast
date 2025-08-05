@@ -1,6 +1,6 @@
 # fourier_analysis.py
 
-from utils import WaveTypes
+from utils import Waveform
 from forecast.models.template import GenerateArray, \
     ChartVariables
 from forecast.models.fourier_utils import FourierWaveImpl2, FourierTransformFFT
@@ -15,13 +15,18 @@ class FourierAnalysisArray(GenerateArray):
         q.index_stop = 1
         q.increment = 0.001
 
-        if q.base_model == 5:
-            a = FourierWaveImpl2(q, wave_type=WaveTypes.square, frequency=5.0, duty_cycle=0.5)
-            b = FourierWaveImpl2(q, wave_type=WaveTypes.triangle, frequency=5.0, width=0.5)
+        if q.waveform == 0:
+            a = FourierWaveImpl2(q, waveform=Waveform.square, frequency=5.0, duty_cycle=0.5)
             self.array.append(a)
-            self.array.append(FourierTransformFFT(q, o=a, wave_type=WaveTypes.square))
-            self.array.append(b)
-            self.array.append(FourierTransformFFT(q, o=b, wave_type=WaveTypes.triangle))
+            self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.square))
+        elif q.waveform == 1:
+            a = FourierWaveImpl2(q, waveform=Waveform.triangle, frequency=5.0, width=0.5)
+            self.array.append(a)
+            self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.triangle))
+        elif q.waveform == 2:
+            a = FourierWaveImpl2(q, waveform=Waveform.parabola, frequency=5.0)
+            self.array.append(a)
+            self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.parabola))
 
 
 class FourierAnalysisChartVariables(ChartVariables):
