@@ -72,19 +72,24 @@ class FourierSquareWaveImpl2(Fourier):
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         self.wave = SquareWaveImpl2(q)
-        self.duration = self.wave.duration
-        self.sampling_frequency = self.wave.sampling_frequency
-        self.frequency = self.wave.frequency
-        self.duty_cycle = self.wave.duty_cycle
 
         t = UtilsJSONEncoder()
         t.encode(self.wave)
 
 
-class FourierTriangleWave(Fourier):
+class FourierTriangleWaveImpl1(Fourier):
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         self.wave = TriangleWave()
+
+        t = UtilsJSONEncoder()
+        t.encode(self.wave)
+
+
+class FourierTriangleWaveImpl2(Fourier):
+    def __init__(self, q: ModelRequestObj):
+        super().__init__(q)
+        self.wave = TriangleWaveImpl2(q)
 
         t = UtilsJSONEncoder()
         t.encode(self.wave)
@@ -111,21 +116,21 @@ class FourierSquareWave3(FourierSquareWaveImpl1):
         self.wave.populate(20)
 
 
-class FourierTriangleWave1(FourierTriangleWave):
+class FourierTriangleWave1(FourierTriangleWaveImpl1):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         self.wave.populate(2)
 
 
-class FourierTriangleWave2(FourierTriangleWave):
+class FourierTriangleWave2(FourierTriangleWaveImpl1):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
         self.wave.populate(3)
 
 
-class FourierTriangleWave3(FourierTriangleWave):
+class FourierTriangleWave3(FourierTriangleWaveImpl1):
 
     def __init__(self, q: ModelRequestObj):
         super().__init__(q)
@@ -154,18 +159,20 @@ class WaveImpl1:
 
 class WaveImpl2:
 
-    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.5):
+    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
         self.duration = q.index_stop - q.index_start
         self.sampling_frequency = self.duration/q.increment
         self.frequency = frequency
         self.duty_cycle = duty_cycle
+        self.width = width
         self.wave_data = []
 
-    def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.5):
+    def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
         self.duration = q.index_stop - q.index_start
         self.sampling_frequency = self.duration / q.increment
         self.frequency = frequency
         self.duty_cycle = duty_cycle
+        self.width = width
 
     def np_wave(self, q: ModelRequestObj):
         return ""
@@ -190,13 +197,13 @@ class SquareWaveImpl1(WaveImpl1):
 
 class SquareWaveImpl2(WaveImpl2):
 
-    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.5):
-        super().__init__(q, frequency, duty_cycle)
+    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+        super().__init__(q=q, frequency=frequency, duty_cycle=duty_cycle)
         t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
         self.wave_data = signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle).tolist()
 
-    def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.5):
-        super().populate(q, frequency, duty_cycle)
+    def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+        super().populate(q=q, frequency=frequency, duty_cycle=duty_cycle)
         t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
         self.wave_data = signal.square(2 * np.pi * self.frequency * t, duty=self.duty_cycle).tolist()
 
@@ -218,3 +225,21 @@ class TriangleWave(WaveImpl1):
         h = (2.0 * i) - 1.0
         h1 = 4.0 / math.pow(h * math.pi, 2)
         return h1 * math.cos(h * math.pi * t) * -1.0
+
+
+class TriangleWaveImpl2(WaveImpl2):
+
+    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+        super().__init__(q=q, frequency=frequency, width=width)
+        t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
+        self.wave_data = signal.sawtooth(2 * np.pi * self.frequency * t, width=self.width).tolist()
+
+    def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+        super().populate(q=q, frequency=frequency, width=width)
+        t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
+        self.wave_data = signal.sawtooth(2 * np.pi * self.frequency * t, width=self.width).tolist()
+
+    def np_wave(self, q: ModelRequestObj):
+        super().np_wave(q)
+        t = np.linspace(q.index_start, q.index_stop, int(self.sampling_frequency), endpoint=False)
+        return signal.sawtooth(2 * np.pi * self.frequency * t, width=self.width).tolist()
