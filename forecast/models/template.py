@@ -38,6 +38,8 @@ class Template:
         self.index_stop = q.index_stop
         self.increment = q.increment
 
+        self.limit_bounds = q.limit_bounds
+
         self.data_point = 0.0
         self.data = []
 

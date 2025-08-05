@@ -10,7 +10,8 @@ let Profile = {
         document.getElementById("simulate").addEventListener("click", function () {
             $.post("/simulate",
                 {
-                    baseModel: document.getElementById("baseModel").value
+                    baseModel: document.getElementById("baseModel").value,
+                    limitBounds: document.getElementById("limitBounds").value
                 }
             )
                 .done(function (data, status) {

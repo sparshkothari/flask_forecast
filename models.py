@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, FloatField, IntField
+from mongoengine import Document, StringField, FloatField, IntField, BooleanField
 
 
 class ModelRequestObj(Document):
@@ -6,6 +6,7 @@ class ModelRequestObj(Document):
     index_start = FloatField(required=True)
     index_stop = FloatField(required=True)
     increment = FloatField(required=True)
+    limit_bounds = BooleanField(required=True)
 
 
 class DataObj(Document):
