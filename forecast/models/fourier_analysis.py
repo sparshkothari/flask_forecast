@@ -1,10 +1,9 @@
 # fourier_analysis.py
 
-import math
-from utils import UnitsLabel
+from utils import WaveTypes
 from forecast.models.template import GenerateArray, \
     ChartVariables
-from forecast.models.fourier import FourierSquareWaveImpl2, FourierTriangleWaveImpl2
+from forecast.models.fourier import FourierWaveImpl2
 from forecast.models.fourier_transform import FourierTransformFFT
 from models import ModelRequestObj
 
@@ -17,56 +16,15 @@ class FourierAnalysisArray(GenerateArray):
         q.index_stop = 1
         q.increment = 0.001
 
-        if q.base_model == 8:
-            self.array.append(FourierSquareWave1(q))
-            self.array.append(FourierTransformSquareWave1(q))
-            self.array.append(FourierTriangleWave1(q))
-            self.array.append(FourierTransformTriangleWave1(q))
+        if q.base_model == 5:
+            a = FourierWaveImpl2(q, wave_type=WaveTypes.square, frequency=5.0, duty_cycle=0.5)
+            b = FourierWaveImpl2(q, wave_type=WaveTypes.triangle, frequency=5.0, width=0.5)
+            self.array.append(a)
+            self.array.append(FourierTransformFFT(q, o=a, wave_type=WaveTypes.square))
+            self.array.append(b)
+            self.array.append(FourierTransformFFT(q, o=b, wave_type=WaveTypes.triangle))
 
 
 class FourierAnalysisChartVariables(ChartVariables):
     pass
 
-
-class FourierSquareWave1(FourierSquareWaveImpl2):
-
-    def __init__(self, q: ModelRequestObj):
-        super().__init__(q)
-        self.xAxisTitleText = UnitsLabel.time_seconds
-        frequency = 5.0
-        duty_cycle = 0.5
-        self.wave.populate(q, frequency=frequency, duty_cycle=duty_cycle)
-        self.duration = self.wave.duration
-        self.sampling_frequency = self.wave.sampling_frequency
-        self.frequency = self.wave.frequency
-        self.duty_cycle = self.wave.duty_cycle
-
-
-class FourierTransformSquareWave1(FourierTransformFFT):
-
-    def __init__(self, q: ModelRequestObj):
-        super().__init__(q)
-        o = FourierSquareWave1(q)
-        self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration, duty_cycle=o.wave.duty_cycle)
-
-
-class FourierTriangleWave1(FourierTriangleWaveImpl2):
-
-    def __init__(self, q: ModelRequestObj):
-        super().__init__(q)
-        self.xAxisTitleText = UnitsLabel.time_seconds
-        frequency = 5.0
-        width = 0.5
-        self.wave.populate(q, frequency=frequency, width=width)
-        self.duration = self.wave.duration
-        self.sampling_frequency = self.wave.sampling_frequency
-        self.frequency = self.wave.frequency
-        self.width = self.wave.width
-
-
-class FourierTransformTriangleWave1(FourierTransformFFT):
-
-    def __init__(self, q: ModelRequestObj):
-        super().__init__(q)
-        o = FourierTriangleWave1(q)
-        self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration, width=o.wave.width)
