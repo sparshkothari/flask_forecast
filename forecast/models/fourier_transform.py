@@ -62,16 +62,19 @@ class FourierTransformFFT(Template):
         self.sampling_frequency = 0
         self.frequency = 0.0
         self.duration = 0.0
-        self.duty_cycle = 0.0
+        self.duty_cycle = "N/A"
+        self.width = "N/A"
         self.fft_shifted = []
         self.freq_shifted = []
 
-    def populate(self, signal, sampling_frequency, frequency, duration, duty_cycle):
+    def populate(self, signal, sampling_frequency, frequency, duration, duty_cycle: float = 0.0, width: float = 0.0):
 
         self.sampling_frequency = sampling_frequency
         self.frequency = frequency
         self.duration = duration
         self.duty_cycle = duty_cycle
+        self.width = width
+
         # Perform the FFT
         # The FFT result is complex, so we take the absolute value for magnitude
         # and shift the zero-frequency component to the center for better visualization.
@@ -93,7 +96,8 @@ class FourierTransformFFT(Template):
         for i in np.arange(self.index_start, self.index_stop, self.increment):
             self.iterate(index, i)
             f = self.freq_shifted[index]
-            if np.abs(f) < (self.frequency * 10):
+            bounds = self.frequency * 10
+            if (self.limit_bounds and np.abs(f) < bounds) or not self.limit_bounds:
                 data_item = {self.lineSeriesValueX: f, self.lineSeriesValueY: self.data_point}
                 self.data.append(data_item)
             index += 1
