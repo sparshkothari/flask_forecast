@@ -158,3 +158,4 @@ class Waveform:
     triangle = "triangle_wave"
     parabola = "parabola_wave"
     exponential = "exponential"
+    cubic = "cubic"

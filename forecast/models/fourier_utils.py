@@ -42,6 +42,8 @@ class FourierWaveImpl1(Fourier):
             self.wave = ParabolaWaveImpl1()
         elif waveform == Waveform.exponential:
             self.wave = ExponentialWaveImpl1()
+        elif waveform == Waveform.cubic:
+            self.wave = CubicWaveImpl1()
 
         self.wave.populate(n_sum_limit)
         t = UtilsJSONEncoder()
@@ -123,6 +125,20 @@ class ExponentialWaveImpl1(WaveImpl1):
         return o * h * (math.cos(i*t) - (i*math.sin(i*t)))
 
 
+class CubicWaveImpl1(WaveImpl1):
+
+    def __init__(self, n_sum_limit: int = 0):
+        super().__init__(n_sum_limit)
+        self.a_initial = 0
+
+    def method_impl(self, i: float = 0.0, time: float = 0.0):
+        super().method_impl(i, time)
+        t = time
+        o = 2 * math.pow(-1.0, i)
+        h = (6/math.pow(i, 3)) - (math.pow(math.pi, 2)/i)
+        return o * h * (math.sin(i*t))
+
+
 class FourierWaveImpl2(Fourier):
     def __init__(self, q: ModelRequestObj, waveform: str, frequency: float = 0.0, duty_cycle=None, width=None):
         super().__init__(q)
@@ -146,6 +162,9 @@ class FourierWaveImpl2(Fourier):
             self.wave.populate(q, frequency=frequency)
         elif waveform == Waveform.exponential:
             self.wave = ExponentialWaveImpl2(q)
+            self.wave.populate(q, frequency=frequency)
+        elif waveform == Waveform.cubic:
+            self.wave = CubicWaveImpl2(q)
             self.wave.populate(q, frequency=frequency)
 
         self.duration = self.wave.duration
@@ -262,6 +281,13 @@ class ExponentialWaveImpl2(CustomWaveImpl2):
     def wave_equation(self, q: ModelRequestObj, t):
         super().wave_equation(q, t)
         return math.e**(4*t)
+
+
+class CubicWaveImpl2(CustomWaveImpl2):
+
+    def wave_equation(self, q: ModelRequestObj, t):
+        super().wave_equation(q, t)
+        return 100*((t-(self.duration/(2*self.frequency)))**3)
 
 
 class FourierTransformFFT(Template):
