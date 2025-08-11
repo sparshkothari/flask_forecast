@@ -145,6 +145,7 @@ class FourierWaveImpl2(Fourier):
         super().__init__(q)
         self.model += "_waveform:_" + waveform
         self.title = self.model
+        self.xAxisTitleText = UnitsLabel.time_seconds
         self.lineSeriesValueY = "y_" + self.model
         self.lineSeriesName = self.lineSeriesValueY
         self.wave = None
@@ -170,8 +171,8 @@ class FourierWaveImpl2(Fourier):
         elif waveform == Waveform.aperiodic_pulse:
             self.wave = AperiodicPulseImpl2(q)
             self.wave.populate(q, frequency=frequency)
-        elif waveform == Waveform.dirac_delta_rect:
-            self.wave = DiracDeltaRectImpl2(q, params=wave_params)
+        elif waveform == Waveform.dirac_delta:
+            self.wave = DiracDeltaImpl2(q, params=wave_params)
             self.wave.populate(q)
 
         self.duration = self.wave.duration
@@ -213,22 +214,28 @@ class WaveImpl2:
         return self.wave_data[index]
 
 
-class DiracDeltaRectImpl2(WaveImpl2):
+class DiracDeltaImpl2(WaveImpl2):
 
     def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0,
                  params: dict = None):
         super().__init__(q=q, params=params)
-        self.epsilon = float(self.custom_params["e"])
+        self.epsilon = None
+        self.sigma = None
+        self.dirac_delta_type = str(self.custom_params[Waveform.dirac_delta_type])
+        if self.dirac_delta_type == Waveform.dirac_delta_rectangular:  # Rectangular
+            self.epsilon = float(self.custom_params[Waveform.epsilon])
+        elif self.dirac_delta_type == Waveform.dirac_delta_gaussian:  # Gaussian
+            self.sigma = float(self.custom_params[Waveform.sigma])
 
     def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
         super().populate(q=q, frequency=frequency)
         # --- Dirac Delta Approximate rectangular pulse ---
-        pulse = self.dirac_delta_approx_rect(self.fetch_t())
+        pulse = self.dirac_delta_approx(self.fetch_t())
         self.wave_data = pulse.tolist()
 
     def np_wave(self, q: ModelRequestObj):
         super().np_wave(q)
-        pulse = self.dirac_delta_approx_rect(self.fetch_t())
+        pulse = self.dirac_delta_approx(self.fetch_t())
         return np.fft.ifftshift(pulse)
 
     def fetch_t(self):
@@ -238,12 +245,22 @@ class DiracDeltaRectImpl2(WaveImpl2):
         # --- Time array ---
         return np.arange(-N // 2, N // 2) * T  # symmetric around zero
 
+    def dirac_delta_approx(self, x):
+        if self.dirac_delta_type == Waveform.dirac_delta_rectangular:  # Rectangular
+            return self.dirac_delta_approx_rect(x)
+        elif self.dirac_delta_type == Waveform.dirac_delta_gaussian:  # Gaussian
+            return self.dirac_delta_approx_gaussian(x)
+
     def dirac_delta_approx_rect(self, x):
         """Approximates the Dirac delta function using a rectangular pulse."""
         val = np.zeros_like(x, dtype=float)
         # The pulse is 1/epsilon for -epsilon/2 <= x <= epsilon/2, and 0 otherwise.
         val[np.abs(x) <= self.epsilon / 2] = 1.0 / self.epsilon
         return val
+
+    def dirac_delta_approx_gaussian(self, x):
+        """Approximates the Dirac delta function using a Gaussian function."""
+        return (1 / (self.sigma * np.sqrt(2 * np.pi))) * np.exp(-x ** 2 / (2 * self.sigma ** 2))
 
 
 class AperiodicPulseImpl2(WaveImpl2):
@@ -381,6 +398,7 @@ class FourierTransformFFT(Template):
         self.duration = None
         self.duty_cycle = None
         self.width = None
+        self.params = o.wave.custom_params
         self.fft_shifted = []
         self.freq_shifted = []
 

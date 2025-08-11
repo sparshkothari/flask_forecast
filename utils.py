@@ -160,4 +160,10 @@ class Waveform:
     exponential = "exponential"
     cubic = "cubic"
     aperiodic_pulse = "aperiodic pulse"
-    dirac_delta_rect = "dirac delta rectangular"
+    dirac_delta = "dirac delta"
+
+    dirac_delta_type = "dirac_delta_type"
+    dirac_delta_rectangular = "dirac delta rectangular"
+    dirac_delta_gaussian = "dirac delta gaussian"
+    epsilon = "epsilon"
+    sigma = "sigma"

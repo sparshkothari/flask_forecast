@@ -40,11 +40,18 @@ class FourierAnalysisArray(GenerateArray):
             self.array.append(a)
             self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.aperiodic_pulse))
         elif q.waveform == 6:
-            a = FourierWaveImpl2(q, waveform=Waveform.dirac_delta_rect, wave_params={"e": 0.001})
+            a = FourierWaveImpl2(q, waveform=Waveform.dirac_delta, wave_params={Waveform.dirac_delta_type:
+                                                                                Waveform.dirac_delta_rectangular,
+                                                                                Waveform.epsilon: 0.001})
             self.array.append(a)
-            self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.dirac_delta_rect))
+            self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.dirac_delta))
+        elif q.waveform == 7:
+            a = FourierWaveImpl2(q, waveform=Waveform.dirac_delta, wave_params={Waveform.dirac_delta_type:
+                                                                                Waveform.dirac_delta_gaussian,
+                                                                                Waveform.sigma: 0.001})
+            self.array.append(a)
+            self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.dirac_delta))
 
 
 class FourierAnalysisChartVariables(ChartVariables):
     pass
-
