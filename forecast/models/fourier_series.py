@@ -49,6 +49,14 @@ class FourierSeriesArray(GenerateArray):
             self.array.append(FourierWaveImpl1(q, n_sum_limit=15, waveform=Waveform.exponential))
             self.array.append(FourierWaveImpl1(q, n_sum_limit=25, waveform=Waveform.exponential))
             self.array.append(FourierWaveImpl1(q, n_sum_limit=35, waveform=Waveform.exponential))
+        elif q.waveform == 4:
+            q.index_stop = 15
+            self.array.append(FourierWaveImpl1(q, n_sum_limit=5, waveform=Waveform.cubic))
+            self.array.append(FourierWaveImpl1(q, n_sum_limit=10, waveform=Waveform.cubic))
+            self.array.append(FourierWaveImpl1(q, n_sum_limit=15, waveform=Waveform.cubic))
+            self.array.append(FourierWaveImpl1(q, n_sum_limit=25, waveform=Waveform.cubic))
+            self.array.append(FourierWaveImpl1(q, n_sum_limit=50, waveform=Waveform.cubic))
+            self.array.append(FourierWaveImpl1(q, n_sum_limit=100, waveform=Waveform.cubic))
 
 
 class FourierSeriesChartVariables(ChartVariables):
