@@ -115,14 +115,14 @@ class ExponentialWaveImpl1(WaveImpl1):
 
     def __init__(self, n_sum_limit: int = 0):
         super().__init__(n_sum_limit)
-        self.a_initial = math.sinh(math.pi)/math.pi
+        self.a_initial = math.sinh(math.pi) / math.pi
 
     def method_impl(self, i: float = 0.0, time: float = 0.0):
         super().method_impl(i, time)
         t = time
-        o = 2 * (math.sinh(math.pi)/math.pi)
-        h = math.pow(-1.0, i)/(1 + math.pow(i, 2))
-        return o * h * (math.cos(i*t) - (i*math.sin(i*t)))
+        o = 2 * (math.sinh(math.pi) / math.pi)
+        h = math.pow(-1.0, i) / (1 + math.pow(i, 2))
+        return o * h * (math.cos(i * t) - (i * math.sin(i * t)))
 
 
 class CubicWaveImpl1(WaveImpl1):
@@ -135,12 +135,13 @@ class CubicWaveImpl1(WaveImpl1):
         super().method_impl(i, time)
         t = time
         o = 2 * math.pow(-1.0, i)
-        h = (6/math.pow(i, 3)) - (math.pow(math.pi, 2)/i)
-        return o * h * (math.sin(i*t))
+        h = (6 / math.pow(i, 3)) - (math.pow(math.pi, 2) / i)
+        return o * h * (math.sin(i * t))
 
 
 class FourierWaveImpl2(Fourier):
-    def __init__(self, q: ModelRequestObj, waveform: str, frequency: float = 0.0, duty_cycle=None, width=None):
+    def __init__(self, q: ModelRequestObj, waveform: str, frequency: float = 0.0, duty_cycle=None, width=None,
+                 wave_params: dict = None):
         super().__init__(q)
         self.model += "_waveform:_" + waveform
         self.title = self.model
@@ -169,6 +170,9 @@ class FourierWaveImpl2(Fourier):
         elif waveform == Waveform.aperiodic_pulse:
             self.wave = AperiodicPulseImpl2(q)
             self.wave.populate(q, frequency=frequency)
+        elif waveform == Waveform.dirac_delta_rect:
+            self.wave = DiracDeltaRectImpl2(q, params=wave_params)
+            self.wave.populate(q)
 
         self.duration = self.wave.duration
         self.sampling_frequency = self.wave.sampling_frequency
@@ -180,7 +184,8 @@ class FourierWaveImpl2(Fourier):
 
 class WaveImpl2:
 
-    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0,
+                 params: dict = None):
         self.duration = q.index_stop - q.index_start
         self.sampling_frequency = self.duration / q.increment
         self.frequency = frequency
@@ -188,6 +193,8 @@ class WaveImpl2:
         self.width = width
         self.wave_data = []
         self.custom_params = {}
+        if params:
+            self.custom_params = params
 
     def set_custom_params(self, params: dict):
         self.custom_params = params
@@ -206,40 +213,67 @@ class WaveImpl2:
         return self.wave_data[index]
 
 
-class AperiodicPulseImpl2(WaveImpl2):
+class DiracDeltaRectImpl2(WaveImpl2):
 
-    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
-        super().__init__(q=q, frequency=frequency)
+    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0,
+                 params: dict = None):
+        super().__init__(q=q, params=params)
+        self.epsilon = float(self.custom_params["e"])
 
     def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
         super().populate(q=q, frequency=frequency)
-        T = 1 / self.sampling_frequency  # Sampling interval
-        N = int(self.sampling_frequency)  # Number of samples
-        pulse_width = 0.05  # Pulse width in seconds
-        pulse_amplitude = 1  # Pulse amplitude
-
-        # --- Time array ---
-        t = np.arange(-N // 2, N // 2) * T  # symmetric around zero
-
-        # --- Aperiodic rectangular pulse ---
-        pulse = np.zeros(N)
-        pulse[np.abs(t) <= (pulse_width / 2)] = pulse_amplitude
+        # --- Dirac Delta Approximate rectangular pulse ---
+        pulse = self.dirac_delta_approx_rect(self.fetch_t())
         self.wave_data = pulse.tolist()
 
     def np_wave(self, q: ModelRequestObj):
         super().np_wave(q)
+        pulse = self.dirac_delta_approx_rect(self.fetch_t())
+        return np.fft.ifftshift(pulse)
+
+    def fetch_t(self):
         T = 1 / self.sampling_frequency  # Sampling interval
         N = int(self.sampling_frequency)  # Number of samples
-        pulse_width = 0.05  # Pulse width in seconds
-        pulse_amplitude = 1  # Pulse amplitude
+
+        # --- Time array ---
+        return np.arange(-N // 2, N // 2) * T  # symmetric around zero
+
+    def dirac_delta_approx_rect(self, x):
+        """Approximates the Dirac delta function using a rectangular pulse."""
+        val = np.zeros_like(x, dtype=float)
+        # The pulse is 1/epsilon for -epsilon/2 <= x <= epsilon/2, and 0 otherwise.
+        val[np.abs(x) <= self.epsilon / 2] = 1.0 / self.epsilon
+        return val
+
+
+class AperiodicPulseImpl2(WaveImpl2):
+
+    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+        super().__init__(q=q, frequency=frequency)
+        self.pulse_width = None
+        self.pulse_amplitude = None
+
+    def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+        super().populate(q=q, frequency=frequency)
+        self.wave_data = self.fetch_pulse().tolist()
+
+    def np_wave(self, q: ModelRequestObj):
+        super().np_wave(q)
+        return np.fft.ifftshift(self.fetch_pulse())
+
+    def fetch_pulse(self):
+        T = 1 / self.sampling_frequency  # Sampling interval
+        N = int(self.sampling_frequency)  # Number of samples
+        self.pulse_width = float(1.0 / self.frequency)  # Pulse width in seconds
+        self.pulse_amplitude = 1.0  # Pulse amplitude
 
         # --- Time array ---
         t = np.arange(-N // 2, N // 2) * T  # symmetric around zero
 
         # --- Aperiodic rectangular pulse ---
         pulse = np.zeros(N)
-        pulse[np.abs(t) <= (pulse_width / 2)] = pulse_amplitude
-        return np.fft.ifftshift(pulse)
+        pulse[np.abs(t) <= (self.pulse_width / 2)] = self.pulse_amplitude
+        return pulse
 
 
 class SquareWaveImpl2(WaveImpl2):
@@ -287,7 +321,7 @@ class CustomWaveImpl2(WaveImpl2):
 
     def fetch_t_partial(self, q: ModelRequestObj):
         return np.linspace(q.index_start, q.index_start + self.duration / self.frequency,
-                                int(self.sampling_frequency / self.frequency), endpoint=False)
+                           int(self.sampling_frequency / self.frequency), endpoint=False)
 
     def generate_wave(self, q: ModelRequestObj, t_partial):
         o = self.wave_equation(q, t_partial)
@@ -311,7 +345,7 @@ class ParabolaWaveImpl2(CustomWaveImpl2):
         super().wave_equation(q, t)
         a = float(self.custom_params["a"])
         x0 = q.index_start
-        x1 = q.index_start + self.duration/self.frequency
+        x1 = q.index_start + self.duration / self.frequency
         return a * (t - x0) * (t - x1)
 
 
@@ -319,14 +353,14 @@ class ExponentialWaveImpl2(CustomWaveImpl2):
 
     def wave_equation(self, q: ModelRequestObj, t):
         super().wave_equation(q, t)
-        return math.e**(4*t)
+        return math.e ** (4 * t)
 
 
 class CubicWaveImpl2(CustomWaveImpl2):
 
     def wave_equation(self, q: ModelRequestObj, t):
         super().wave_equation(q, t)
-        return 100*((t-(self.duration/(2*self.frequency)))**3)
+        return 100 * ((t - (self.duration / (2 * self.frequency))) ** 3)
 
 
 class FourierTransformFFT(Template):
@@ -356,11 +390,15 @@ class FourierTransformFFT(Template):
         elif waveform == Waveform.triangle:
             self.populate(waveform, o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
                           width=o.wave.width)
+        elif waveform == Waveform.aperiodic_pulse:
+            self.populate(waveform, o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
+                          reconstruct=True)
         else:
             self.populate(waveform, o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration)
 
-    def populate(self, waveform: str, signal_s, sampling_frequency, frequency, duration, duty_cycle: float = None,
-                 width: float = None):
+    def populate(self, waveform: str, signal_s, sampling_frequency, frequency=None, duration=None,
+                 duty_cycle: float = None,
+                 width: float = None, reconstruct: bool = False):
 
         self.sampling_frequency = sampling_frequency
         self.frequency = frequency
@@ -372,12 +410,22 @@ class FourierTransformFFT(Template):
         # The FFT result is complex, so we take the absolute value for magnitude
         # and shift the zero-frequency component to the center for better visualization.
         fft_result = np.fft.fft(signal_s)
-        fft_magnitude = []
-        if waveform == Waveform.aperiodic_pulse:
-            fft_magnitude = fft_result.real
-        else:
-            fft_magnitude = np.abs(fft_result)
-        self.fft_shifted = np.fft.fftshift(fft_magnitude).tolist()
+        fft_shifted = np.fft.fftshift(fft_result)
+
+        # --- Components ---
+        # real_part = np.real(fft_shifted)
+        magnitude = np.abs(fft_shifted)
+        phase_unwrapped = np.unwrap(np.angle(fft_shifted))
+
+        # Normalize magnitude for viewing
+        magnitude_norm = magnitude / np.max(magnitude)
+
+        # --- Reconstruction from magnitude & phase ---
+        reconstructed = magnitude_norm * np.cos(phase_unwrapped)  # real part reconstruction
+
+        self.fft_shifted = magnitude_norm.tolist()
+        if reconstruct:
+            self.fft_shifted = reconstructed.tolist()
 
         # Generate frequency array
         # The frequencies corresponding to the FFT result
@@ -393,7 +441,9 @@ class FourierTransformFFT(Template):
         for i in np.arange(self.index_start, self.index_stop, self.increment):
             self.iterate(index, i)
             f = self.freq_shifted[index]
-            bounds = self.frequency * 10
+            bounds = 50
+            if self.frequency:
+                bounds = self.frequency * 10
             if (self.limit_bounds and np.abs(f) < bounds) or not self.limit_bounds:
                 data_item = {self.lineSeriesValueX: f, self.lineSeriesValueY: self.data_point}
                 self.data.append(data_item)

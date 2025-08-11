@@ -17,7 +17,6 @@ class FourierSeriesArray(GenerateArray):
 
         if q.waveform == 0:
             q.index_stop = 10.0
-            self.array.append(FourierWaveImpl1(q, n_sum_limit=3, waveform=Waveform.square))
             self.array.append(FourierWaveImpl1(q, n_sum_limit=5, waveform=Waveform.square))
             self.array.append(FourierWaveImpl1(q, n_sum_limit=7, waveform=Waveform.square))
             self.array.append(FourierWaveImpl1(q, n_sum_limit=9, waveform=Waveform.square))
@@ -40,7 +39,6 @@ class FourierSeriesArray(GenerateArray):
             self.array.append(FourierWaveImpl1(q, n_sum_limit=5, waveform=Waveform.parabola))
             self.array.append(FourierWaveImpl1(q, n_sum_limit=10, waveform=Waveform.parabola))
             self.array.append(FourierWaveImpl1(q, n_sum_limit=20, waveform=Waveform.parabola))
-
         elif q.waveform == 3:
             q.index_stop = 15
             self.array.append(FourierWaveImpl1(q, n_sum_limit=5, waveform=Waveform.exponential))
