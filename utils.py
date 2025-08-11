@@ -159,3 +159,4 @@ class Waveform:
     parabola = "parabola_wave"
     exponential = "exponential"
     cubic = "cubic"
+    aperiodic_pulse = "aperiodic pulse"

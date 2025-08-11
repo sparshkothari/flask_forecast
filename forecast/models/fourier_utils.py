@@ -166,6 +166,9 @@ class FourierWaveImpl2(Fourier):
         elif waveform == Waveform.cubic:
             self.wave = CubicWaveImpl2(q)
             self.wave.populate(q, frequency=frequency)
+        elif waveform == Waveform.aperiodic_pulse:
+            self.wave = AperiodicPulseImpl2(q)
+            self.wave.populate(q, frequency=frequency)
 
         self.duration = self.wave.duration
         self.sampling_frequency = self.wave.sampling_frequency
@@ -201,6 +204,42 @@ class WaveImpl2:
 
     def method(self, index: int, time: float = 0.0):
         return self.wave_data[index]
+
+
+class AperiodicPulseImpl2(WaveImpl2):
+
+    def __init__(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+        super().__init__(q=q, frequency=frequency)
+
+    def populate(self, q: ModelRequestObj, frequency: float = 0.0, duty_cycle: float = 0.0, width: float = 0.0):
+        super().populate(q=q, frequency=frequency)
+        T = 1 / self.sampling_frequency  # Sampling interval
+        N = int(self.sampling_frequency)  # Number of samples
+        pulse_width = 0.05  # Pulse width in seconds
+        pulse_amplitude = 1  # Pulse amplitude
+
+        # --- Time array ---
+        t = np.arange(-N // 2, N // 2) * T  # symmetric around zero
+
+        # --- Aperiodic rectangular pulse ---
+        pulse = np.zeros(N)
+        pulse[np.abs(t) <= (pulse_width / 2)] = pulse_amplitude
+        self.wave_data = pulse.tolist()
+
+    def np_wave(self, q: ModelRequestObj):
+        super().np_wave(q)
+        T = 1 / self.sampling_frequency  # Sampling interval
+        N = int(self.sampling_frequency)  # Number of samples
+        pulse_width = 0.05  # Pulse width in seconds
+        pulse_amplitude = 1  # Pulse amplitude
+
+        # --- Time array ---
+        t = np.arange(-N // 2, N // 2) * T  # symmetric around zero
+
+        # --- Aperiodic rectangular pulse ---
+        pulse = np.zeros(N)
+        pulse[np.abs(t) <= (pulse_width / 2)] = pulse_amplitude
+        return np.fft.ifftshift(pulse)
 
 
 class SquareWaveImpl2(WaveImpl2):
@@ -312,15 +351,15 @@ class FourierTransformFFT(Template):
         self.freq_shifted = []
 
         if waveform == Waveform.square:
-            self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
+            self.populate(waveform, o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
                           duty_cycle=o.wave.duty_cycle)
         elif waveform == Waveform.triangle:
-            self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
+            self.populate(waveform, o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
                           width=o.wave.width)
         else:
-            self.populate(o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration)
+            self.populate(waveform, o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration)
 
-    def populate(self, signal_s, sampling_frequency, frequency, duration, duty_cycle: float = None,
+    def populate(self, waveform: str, signal_s, sampling_frequency, frequency, duration, duty_cycle: float = None,
                  width: float = None):
 
         self.sampling_frequency = sampling_frequency
@@ -333,7 +372,11 @@ class FourierTransformFFT(Template):
         # The FFT result is complex, so we take the absolute value for magnitude
         # and shift the zero-frequency component to the center for better visualization.
         fft_result = np.fft.fft(signal_s)
-        fft_magnitude = np.abs(fft_result)
+        fft_magnitude = []
+        if waveform == Waveform.aperiodic_pulse:
+            fft_magnitude = fft_result.real
+        else:
+            fft_magnitude = np.abs(fft_result)
         self.fft_shifted = np.fft.fftshift(fft_magnitude).tolist()
 
         # Generate frequency array
