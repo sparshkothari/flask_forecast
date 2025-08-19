@@ -159,6 +159,8 @@ class Waveform:
     parabola = "parabola_wave"
     exponential = "exponential"
     cubic = "cubic"
+    cosine = "cosine"
+    sine = "sine"
     aperiodic_pulse = "aperiodic pulse"
     dirac_delta = "dirac delta"
 

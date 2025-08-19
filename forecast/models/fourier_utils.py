@@ -168,6 +168,12 @@ class FourierWaveImpl2(Fourier):
         elif waveform == Waveform.cubic:
             self.wave = CubicWaveImpl2(q)
             self.wave.populate(q, frequency=frequency)
+        elif waveform == Waveform.cosine:
+            self.wave = CosineWaveImpl2(q)
+            self.wave.populate(q, frequency=frequency)
+        elif waveform == Waveform.sine:
+            self.wave = SineWaveImpl2(q)
+            self.wave.populate(q, frequency=frequency)
         elif waveform == Waveform.aperiodic_pulse:
             self.wave = AperiodicPulseImpl2(q)
             self.wave.populate(q, frequency=frequency)
@@ -378,6 +384,20 @@ class CubicWaveImpl2(CustomWaveImpl2):
     def wave_equation(self, q: ModelRequestObj, t):
         super().wave_equation(q, t)
         return 100 * ((t - (self.duration / (2 * self.frequency))) ** 3)
+
+
+class CosineWaveImpl2(CustomWaveImpl2):
+
+    def wave_equation(self, q: ModelRequestObj, t):
+        super().wave_equation(q, t)
+        return np.cos(2 * np.pi * t)
+
+
+class SineWaveImpl2(CustomWaveImpl2):
+
+    def wave_equation(self, q: ModelRequestObj, t):
+        super().wave_equation(q, t)
+        return np.sin(2 * np.pi * t)
 
 
 class FourierTransformFFT(Template):

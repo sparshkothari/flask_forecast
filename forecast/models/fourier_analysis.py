@@ -36,16 +36,24 @@ class FourierAnalysisArray(GenerateArray):
             self.array.append(a)
             self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.cubic))
         elif q.waveform == 5:
+            a = FourierWaveImpl2(q, waveform=Waveform.cosine, frequency=1.0)
+            self.array.append(a)
+            self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.cosine))
+        elif q.waveform == 6:
+            a = FourierWaveImpl2(q, waveform=Waveform.sine, frequency=1.0)
+            self.array.append(a)
+            self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.sine))
+        elif q.waveform == 7:
             a = FourierWaveImpl2(q, waveform=Waveform.aperiodic_pulse, frequency=10.0)
             self.array.append(a)
             self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.aperiodic_pulse))
-        elif q.waveform == 6:
+        elif q.waveform == 8:
             a = FourierWaveImpl2(q, waveform=Waveform.dirac_delta, wave_params={Waveform.dirac_delta_type:
                                                                                 Waveform.dirac_delta_rectangular,
                                                                                 Waveform.epsilon: 0.001})
             self.array.append(a)
             self.array.append(FourierTransformFFT(q, o=a, waveform=Waveform.dirac_delta))
-        elif q.waveform == 7:
+        elif q.waveform == 9:
             a = FourierWaveImpl2(q, waveform=Waveform.dirac_delta, wave_params={Waveform.dirac_delta_type:
                                                                                 Waveform.dirac_delta_gaussian,
                                                                                 Waveform.sigma: 0.001})
