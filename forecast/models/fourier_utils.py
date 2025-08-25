@@ -390,14 +390,14 @@ class CosineWaveImpl2(CustomWaveImpl2):
 
     def wave_equation(self, q: ModelRequestObj, t):
         super().wave_equation(q, t)
-        return np.cos(2 * np.pi * t)
+        return np.cos(6 * np.pi * t)
 
 
 class SineWaveImpl2(CustomWaveImpl2):
 
     def wave_equation(self, q: ModelRequestObj, t):
         super().wave_equation(q, t)
-        return np.sin(2 * np.pi * t)
+        return np.sin(6 * np.pi * t)
 
 
 class FourierTransformFFT(Template):
@@ -430,13 +430,17 @@ class FourierTransformFFT(Template):
                           width=o.wave.width)
         elif waveform == Waveform.aperiodic_pulse:
             self.populate(waveform, o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
-                          reconstruct=True)
+                          reconstruct_cos=True)
+        elif waveform == Waveform.sine:
+            self.populate(waveform, o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
+                          reconstruct_sin=True)
         else:
-            self.populate(waveform, o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration)
+            self.populate(waveform, o.wave.np_wave(q), o.wave.sampling_frequency, o.wave.frequency, o.wave.duration,
+                          reconstruct_cos=True)
 
     def populate(self, waveform: str, signal_s, sampling_frequency, frequency=None, duration=None,
                  duty_cycle: float = None,
-                 width: float = None, reconstruct: bool = False):
+                 width: float = None, reconstruct_cos: bool = False, reconstruct_sin: bool = False):
 
         self.sampling_frequency = sampling_frequency
         self.frequency = frequency
@@ -459,11 +463,13 @@ class FourierTransformFFT(Template):
         magnitude_norm = magnitude / np.max(magnitude)
 
         # --- Reconstruction from magnitude & phase ---
-        reconstructed = magnitude_norm * np.cos(phase_unwrapped)  # real part reconstruction
-
+        reconstructed_cos = magnitude_norm * np.cos(phase_unwrapped)  # real part reconstruction
+        reconstructed_sin = magnitude_norm * np.sin(phase_unwrapped)  # imaginary part reconstruction
         self.fft_shifted = magnitude_norm.tolist()
-        if reconstruct:
-            self.fft_shifted = reconstructed.tolist()
+        if reconstruct_cos:
+            self.fft_shifted = reconstructed_cos.tolist()
+        elif reconstruct_sin:
+            self.fft_shifted = reconstructed_sin.tolist()
 
         # Generate frequency array
         # The frequencies corresponding to the FFT result
